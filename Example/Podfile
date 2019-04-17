@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '8.0'
+
+target 'MYKit_Example' do
+  pod 'MYKit', :path => '../'
+
+  target 'MYKit_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
