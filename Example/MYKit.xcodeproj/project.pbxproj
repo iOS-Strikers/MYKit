@@ -8,13 +8,34 @@
 
 /* Begin PBXBuildFile section */
 		1B36925AF22DADD1FDEB0427 /* Pods_MYKit_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 400795E3CFCB8D33BC17623F /* Pods_MYKit_Example.framework */; };
+		32DEE02E22672C2D00057E4C /* FoundationKitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEDFFD22672C2C00057E4C /* FoundationKitViewController.m */; };
+		32DEE02F22672C2D00057E4C /* MYKVOViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEDFFF22672C2D00057E4C /* MYKVOViewController.m */; };
+		32DEE03022672C2D00057E4C /* MYTimerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE00122672C2D00057E4C /* MYTimerViewController.m */; };
+		32DEE03122672C2D00057E4C /* MYUnrecognizedSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE00222672C2D00057E4C /* MYUnrecognizedSelectorViewController.m */; };
+		32DEE03222672C2D00057E4C /* MYFoundationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE00322672C2D00057E4C /* MYFoundationViewController.m */; };
+		32DEE03322672C2D00057E4C /* MYNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE00422672C2D00057E4C /* MYNotificationViewController.m */; };
+		32DEE03422672C2D00057E4C /* MYUncaughtExceptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE00622672C2D00057E4C /* MYUncaughtExceptionViewController.m */; };
+		32DEE03522672C2D00057E4C /* UIKitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE00C22672C2D00057E4C /* UIKitViewController.m */; };
+		32DEE03622672C2D00057E4C /* MYAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE00D22672C2D00057E4C /* MYAppDelegate.m */; };
+		32DEE03722672C2D00057E4C /* MYDateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE01022672C2D00057E4C /* MYDateViewController.m */; };
+		32DEE03822672C2D00057E4C /* MYColorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE01222672C2D00057E4C /* MYColorViewController.m */; };
+		32DEE03922672C2D00057E4C /* MYAlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE01422672C2D00057E4C /* MYAlertViewController.m */; };
+		32DEE03A22672C2D00057E4C /* MYLabelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE01622672C2D00057E4C /* MYLabelViewController.m */; };
+		32DEE03B22672C2D00057E4C /* MYImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE01822672C2D00057E4C /* MYImageViewController.m */; };
+		32DEE03C22672C2D00057E4C /* MYNavigationBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE01A22672C2D00057E4C /* MYNavigationBarViewController.m */; };
+		32DEE03D22672C2D00057E4C /* MYTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE01B22672C2D00057E4C /* MYTextViewController.m */; };
+		32DEE03E22672C2D00057E4C /* MYPlaceHolderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE01D22672C2D00057E4C /* MYPlaceHolderView.m */; };
+		32DEE03F22672C2D00057E4C /* MYButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE02122672C2D00057E4C /* MYButtonViewController.m */; };
+		32DEE04022672C2D00057E4C /* MYTextFieldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE02322672C2D00057E4C /* MYTextFieldViewController.m */; };
+		32DEE04122672C2D00057E4C /* MYTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE02522672C2D00057E4C /* MYTableViewController.m */; };
+		32DEE04222672C2D00057E4C /* MYCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE02722672C2D00057E4C /* MYCollectionViewController.m */; };
+		32DEE04322672C2D00057E4C /* MYViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE02922672C2D00057E4C /* MYViewController.m */; };
+		32DEE04422672C2D00057E4C /* SafeKitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32DEE02D22672C2D00057E4C /* SafeKitViewController.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
 		6003F598195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F596195388D20070C39A /* InfoPlist.strings */; };
 		6003F59A195388D20070C39A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F599195388D20070C39A /* main.m */; };
-		6003F59E195388D20070C39A /* MYAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F59D195388D20070C39A /* MYAppDelegate.m */; };
-		6003F5A7195388D20070C39A /* MYViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5A6195388D20070C39A /* MYViewController.m */; };
 		6003F5A9195388D20070C39A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5A8195388D20070C39A /* Images.xcassets */; };
 		6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F5AF195388D20070C39A /* XCTest.framework */; };
 		6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
@@ -38,6 +59,52 @@
 
 /* Begin PBXFileReference section */
 		2FB4D43C7A3AFA0B7259E645 /* Pods-MYKit_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MYKit_Tests.release.xcconfig"; path = "Target Support Files/Pods-MYKit_Tests/Pods-MYKit_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		32DEDFFD22672C2C00057E4C /* FoundationKitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FoundationKitViewController.m; sourceTree = "<group>"; };
+		32DEDFFF22672C2D00057E4C /* MYKVOViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYKVOViewController.m; sourceTree = "<group>"; };
+		32DEE00022672C2D00057E4C /* MYUncaughtExceptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYUncaughtExceptionViewController.h; sourceTree = "<group>"; };
+		32DEE00122672C2D00057E4C /* MYTimerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYTimerViewController.m; sourceTree = "<group>"; };
+		32DEE00222672C2D00057E4C /* MYUnrecognizedSelectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYUnrecognizedSelectorViewController.m; sourceTree = "<group>"; };
+		32DEE00322672C2D00057E4C /* MYFoundationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYFoundationViewController.m; sourceTree = "<group>"; };
+		32DEE00422672C2D00057E4C /* MYNotificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYNotificationViewController.m; sourceTree = "<group>"; };
+		32DEE00522672C2D00057E4C /* MYTimerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYTimerViewController.h; sourceTree = "<group>"; };
+		32DEE00622672C2D00057E4C /* MYUncaughtExceptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYUncaughtExceptionViewController.m; sourceTree = "<group>"; };
+		32DEE00722672C2D00057E4C /* MYKVOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYKVOViewController.h; sourceTree = "<group>"; };
+		32DEE00822672C2D00057E4C /* MYUnrecognizedSelectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYUnrecognizedSelectorViewController.h; sourceTree = "<group>"; };
+		32DEE00922672C2D00057E4C /* MYNotificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYNotificationViewController.h; sourceTree = "<group>"; };
+		32DEE00A22672C2D00057E4C /* MYFoundationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYFoundationViewController.h; sourceTree = "<group>"; };
+		32DEE00B22672C2D00057E4C /* FoundationKitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FoundationKitViewController.h; sourceTree = "<group>"; };
+		32DEE00C22672C2D00057E4C /* UIKitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIKitViewController.m; sourceTree = "<group>"; };
+		32DEE00D22672C2D00057E4C /* MYAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYAppDelegate.m; sourceTree = "<group>"; };
+		32DEE00F22672C2D00057E4C /* MYDateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYDateViewController.h; sourceTree = "<group>"; };
+		32DEE01022672C2D00057E4C /* MYDateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYDateViewController.m; sourceTree = "<group>"; };
+		32DEE01222672C2D00057E4C /* MYColorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYColorViewController.m; sourceTree = "<group>"; };
+		32DEE01322672C2D00057E4C /* MYButtonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYButtonViewController.h; sourceTree = "<group>"; };
+		32DEE01422672C2D00057E4C /* MYAlertViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYAlertViewController.m; sourceTree = "<group>"; };
+		32DEE01522672C2D00057E4C /* MYTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYTableViewController.h; sourceTree = "<group>"; };
+		32DEE01622672C2D00057E4C /* MYLabelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYLabelViewController.m; sourceTree = "<group>"; };
+		32DEE01722672C2D00057E4C /* MYTextFieldViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYTextFieldViewController.h; sourceTree = "<group>"; };
+		32DEE01822672C2D00057E4C /* MYImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYImageViewController.m; sourceTree = "<group>"; };
+		32DEE01922672C2D00057E4C /* MYCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYCollectionViewController.h; sourceTree = "<group>"; };
+		32DEE01A22672C2D00057E4C /* MYNavigationBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYNavigationBarViewController.m; sourceTree = "<group>"; };
+		32DEE01B22672C2D00057E4C /* MYTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYTextViewController.m; sourceTree = "<group>"; };
+		32DEE01D22672C2D00057E4C /* MYPlaceHolderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYPlaceHolderView.m; sourceTree = "<group>"; };
+		32DEE01E22672C2D00057E4C /* MYPlaceHolderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYPlaceHolderView.h; sourceTree = "<group>"; };
+		32DEE01F22672C2D00057E4C /* MYViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYViewController.h; sourceTree = "<group>"; };
+		32DEE02022672C2D00057E4C /* MYAlertViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYAlertViewController.h; sourceTree = "<group>"; };
+		32DEE02122672C2D00057E4C /* MYButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYButtonViewController.m; sourceTree = "<group>"; };
+		32DEE02222672C2D00057E4C /* MYColorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYColorViewController.h; sourceTree = "<group>"; };
+		32DEE02322672C2D00057E4C /* MYTextFieldViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYTextFieldViewController.m; sourceTree = "<group>"; };
+		32DEE02422672C2D00057E4C /* MYLabelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYLabelViewController.h; sourceTree = "<group>"; };
+		32DEE02522672C2D00057E4C /* MYTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYTableViewController.m; sourceTree = "<group>"; };
+		32DEE02622672C2D00057E4C /* MYNavigationBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYNavigationBarViewController.h; sourceTree = "<group>"; };
+		32DEE02722672C2D00057E4C /* MYCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYCollectionViewController.m; sourceTree = "<group>"; };
+		32DEE02822672C2D00057E4C /* MYImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYImageViewController.h; sourceTree = "<group>"; };
+		32DEE02922672C2D00057E4C /* MYViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYViewController.m; sourceTree = "<group>"; };
+		32DEE02A22672C2D00057E4C /* MYTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYTextViewController.h; sourceTree = "<group>"; };
+		32DEE02B22672C2D00057E4C /* UIKitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIKitViewController.h; sourceTree = "<group>"; };
+		32DEE02C22672C2D00057E4C /* SafeKitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SafeKitViewController.h; sourceTree = "<group>"; };
+		32DEE02D22672C2D00057E4C /* SafeKitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SafeKitViewController.m; sourceTree = "<group>"; };
+		32DEE04622672C5700057E4C /* MYKitMacroHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYKitMacroHeader.h; sourceTree = "<group>"; };
 		400795E3CFCB8D33BC17623F /* Pods_MYKit_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MYKit_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		499667D9A9405E2F4C132E57 /* Pods_MYKit_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MYKit_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C6A39A7F7BFF78A30544056 /* Pods-MYKit_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MYKit_Tests.debug.xcconfig"; path = "Target Support Files/Pods-MYKit_Tests/Pods-MYKit_Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -50,9 +117,6 @@
 		6003F599195388D20070C39A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6003F59B195388D20070C39A /* MYKit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MYKit-Prefix.pch"; sourceTree = "<group>"; };
 		6003F59C195388D20070C39A /* MYAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MYAppDelegate.h; sourceTree = "<group>"; };
-		6003F59D195388D20070C39A /* MYAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MYAppDelegate.m; sourceTree = "<group>"; };
-		6003F5A5195388D20070C39A /* MYViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MYViewController.h; sourceTree = "<group>"; };
-		6003F5A6195388D20070C39A /* MYViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MYViewController.m; sourceTree = "<group>"; };
 		6003F5A8195388D20070C39A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6003F5AE195388D20070C39A /* MYKit_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MYKit_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F5AF195388D20070C39A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -62,11 +126,11 @@
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		6F1AFFCE0CD6089654C02456 /* Pods-MYKit_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MYKit_Example.debug.xcconfig"; path = "Target Support Files/Pods-MYKit_Example/Pods-MYKit_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		71719F9E1E33DC2100824A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		857188811AC5386D6F8A52E5 /* MYKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = MYKit.podspec; path = ../MYKit.podspec; sourceTree = "<group>"; };
+		857188811AC5386D6F8A52E5 /* MYKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = MYKit.podspec; path = ../MYKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		98347A3021374B240B69B6CF /* Pods-MYKit_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MYKit_Example.release.xcconfig"; path = "Target Support Files/Pods-MYKit_Example/Pods-MYKit_Example.release.xcconfig"; sourceTree = "<group>"; };
-		C9AAA28D490C67459313F3AA /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		DB4C4C99DFC2FD56BE573BFE /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		C9AAA28D490C67459313F3AA /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		DB4C4C99DFC2FD56BE573BFE /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +159,73 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		32DEDFFE22672C2D00057E4C /* SafeKit */ = {
+			isa = PBXGroup;
+			children = (
+				32DEDFFF22672C2D00057E4C /* MYKVOViewController.m */,
+				32DEE00022672C2D00057E4C /* MYUncaughtExceptionViewController.h */,
+				32DEE00122672C2D00057E4C /* MYTimerViewController.m */,
+				32DEE00222672C2D00057E4C /* MYUnrecognizedSelectorViewController.m */,
+				32DEE00322672C2D00057E4C /* MYFoundationViewController.m */,
+				32DEE00422672C2D00057E4C /* MYNotificationViewController.m */,
+				32DEE00522672C2D00057E4C /* MYTimerViewController.h */,
+				32DEE00622672C2D00057E4C /* MYUncaughtExceptionViewController.m */,
+				32DEE00722672C2D00057E4C /* MYKVOViewController.h */,
+				32DEE00822672C2D00057E4C /* MYUnrecognizedSelectorViewController.h */,
+				32DEE00922672C2D00057E4C /* MYNotificationViewController.h */,
+				32DEE00A22672C2D00057E4C /* MYFoundationViewController.h */,
+			);
+			path = SafeKit;
+			sourceTree = "<group>";
+		};
+		32DEE00E22672C2D00057E4C /* FoundationKit */ = {
+			isa = PBXGroup;
+			children = (
+				32DEE00F22672C2D00057E4C /* MYDateViewController.h */,
+				32DEE01022672C2D00057E4C /* MYDateViewController.m */,
+			);
+			path = FoundationKit;
+			sourceTree = "<group>";
+		};
+		32DEE01122672C2D00057E4C /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				32DEE01222672C2D00057E4C /* MYColorViewController.m */,
+				32DEE01322672C2D00057E4C /* MYButtonViewController.h */,
+				32DEE01422672C2D00057E4C /* MYAlertViewController.m */,
+				32DEE01522672C2D00057E4C /* MYTableViewController.h */,
+				32DEE01622672C2D00057E4C /* MYLabelViewController.m */,
+				32DEE01722672C2D00057E4C /* MYTextFieldViewController.h */,
+				32DEE01822672C2D00057E4C /* MYImageViewController.m */,
+				32DEE01922672C2D00057E4C /* MYCollectionViewController.h */,
+				32DEE01A22672C2D00057E4C /* MYNavigationBarViewController.m */,
+				32DEE01B22672C2D00057E4C /* MYTextViewController.m */,
+				32DEE01C22672C2D00057E4C /* PlaceHolderView */,
+				32DEE01F22672C2D00057E4C /* MYViewController.h */,
+				32DEE02022672C2D00057E4C /* MYAlertViewController.h */,
+				32DEE02122672C2D00057E4C /* MYButtonViewController.m */,
+				32DEE02222672C2D00057E4C /* MYColorViewController.h */,
+				32DEE02322672C2D00057E4C /* MYTextFieldViewController.m */,
+				32DEE02422672C2D00057E4C /* MYLabelViewController.h */,
+				32DEE02522672C2D00057E4C /* MYTableViewController.m */,
+				32DEE02622672C2D00057E4C /* MYNavigationBarViewController.h */,
+				32DEE02722672C2D00057E4C /* MYCollectionViewController.m */,
+				32DEE02822672C2D00057E4C /* MYImageViewController.h */,
+				32DEE02922672C2D00057E4C /* MYViewController.m */,
+				32DEE02A22672C2D00057E4C /* MYTextViewController.h */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
+		32DEE01C22672C2D00057E4C /* PlaceHolderView */ = {
+			isa = PBXGroup;
+			children = (
+				32DEE01D22672C2D00057E4C /* MYPlaceHolderView.m */,
+				32DEE01E22672C2D00057E4C /* MYPlaceHolderView.h */,
+			);
+			path = PlaceHolderView;
+			sourceTree = "<group>";
+		};
 		6003F581195388D10070C39A = {
 			isa = PBXGroup;
 			children = (
@@ -133,10 +264,18 @@
 			isa = PBXGroup;
 			children = (
 				6003F59C195388D20070C39A /* MYAppDelegate.h */,
-				6003F59D195388D20070C39A /* MYAppDelegate.m */,
+				32DEE04622672C5700057E4C /* MYKitMacroHeader.h */,
+				32DEE00E22672C2D00057E4C /* FoundationKit */,
+				32DEE00B22672C2D00057E4C /* FoundationKitViewController.h */,
+				32DEDFFD22672C2C00057E4C /* FoundationKitViewController.m */,
+				32DEE00D22672C2D00057E4C /* MYAppDelegate.m */,
+				32DEDFFE22672C2D00057E4C /* SafeKit */,
+				32DEE02C22672C2D00057E4C /* SafeKitViewController.h */,
+				32DEE02D22672C2D00057E4C /* SafeKitViewController.m */,
+				32DEE01122672C2D00057E4C /* UIKit */,
+				32DEE02B22672C2D00057E4C /* UIKitViewController.h */,
+				32DEE00C22672C2D00057E4C /* UIKitViewController.m */,
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
-				6003F5A5195388D20070C39A /* MYViewController.h */,
-				6003F5A6195388D20070C39A /* MYViewController.m */,
 				71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
@@ -193,7 +332,6 @@
 				4C6A39A7F7BFF78A30544056 /* Pods-MYKit_Tests.debug.xcconfig */,
 				2FB4D43C7A3AFA0B7259E645 /* Pods-MYKit_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -208,7 +346,7 @@
 				6003F586195388D20070C39A /* Sources */,
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
-				DA61F6EE92F85F2AE2E0BFF7 /* [CP] Embed Pods Frameworks */,
+				D9B0DBA98DF952A3C1E32217 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -339,7 +477,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DA61F6EE92F85F2AE2E0BFF7 /* [CP] Embed Pods Frameworks */ = {
+		D9B0DBA98DF952A3C1E32217 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -348,13 +486,15 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MYKit_Example/Pods-MYKit_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/MYKit/MYKit.framework",
+				"${BUILT_PRODUCTS_DIR}/MJRefresh/MJRefresh.framework",
+				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MYKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MJRefresh.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -368,9 +508,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6003F59E195388D20070C39A /* MYAppDelegate.m in Sources */,
-				6003F5A7195388D20070C39A /* MYViewController.m in Sources */,
+				32DEE03622672C2D00057E4C /* MYAppDelegate.m in Sources */,
+				32DEE03522672C2D00057E4C /* UIKitViewController.m in Sources */,
+				32DEE04222672C2D00057E4C /* MYCollectionViewController.m in Sources */,
+				32DEE03022672C2D00057E4C /* MYTimerViewController.m in Sources */,
+				32DEE03422672C2D00057E4C /* MYUncaughtExceptionViewController.m in Sources */,
+				32DEE03C22672C2D00057E4C /* MYNavigationBarViewController.m in Sources */,
+				32DEE03222672C2D00057E4C /* MYFoundationViewController.m in Sources */,
+				32DEE02F22672C2D00057E4C /* MYKVOViewController.m in Sources */,
+				32DEE04422672C2D00057E4C /* SafeKitViewController.m in Sources */,
+				32DEE03D22672C2D00057E4C /* MYTextViewController.m in Sources */,
+				32DEE03322672C2D00057E4C /* MYNotificationViewController.m in Sources */,
+				32DEE02E22672C2D00057E4C /* FoundationKitViewController.m in Sources */,
+				32DEE03E22672C2D00057E4C /* MYPlaceHolderView.m in Sources */,
+				32DEE04122672C2D00057E4C /* MYTableViewController.m in Sources */,
+				32DEE03122672C2D00057E4C /* MYUnrecognizedSelectorViewController.m in Sources */,
+				32DEE03922672C2D00057E4C /* MYAlertViewController.m in Sources */,
+				32DEE03B22672C2D00057E4C /* MYImageViewController.m in Sources */,
+				32DEE03722672C2D00057E4C /* MYDateViewController.m in Sources */,
+				32DEE04322672C2D00057E4C /* MYViewController.m in Sources */,
+				32DEE03F22672C2D00057E4C /* MYButtonViewController.m in Sources */,
+				32DEE04022672C2D00057E4C /* MYTextFieldViewController.m in Sources */,
+				32DEE03822672C2D00057E4C /* MYColorViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
+				32DEE03A22672C2D00057E4C /* MYLabelViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -501,6 +662,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MYKit/MYKit-Prefix.pch";
 				INFOPLIST_FILE = "MYKit/MYKit-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -516,6 +678,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MYKit/MYKit-Prefix.pch";
 				INFOPLIST_FILE = "MYKit/MYKit-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
