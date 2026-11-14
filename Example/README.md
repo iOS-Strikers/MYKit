@@ -39,10 +39,25 @@ ci/run.sh
 SIMULATOR_UDID=<UDID> ci/run.sh /tmp/mykit-validation
 ```
 
-脚本使用当前 Xcode，自动选择可用 iPhone 模拟器（或显式 UDID），依次安装锁定依赖、运行 Example、SafeKit 11 模式、Utilities 测试及 `pod lib lint --allow-warnings`。完整测试链路要求 Xcode 26+、iOS 26+ 模拟器，并提供 `xcresulttool get test-results tests`，测试结果必须非零且所有必需用例实际通过。产物默认放在被忽略的 `.artifacts/`。
+脚本使用当前 Xcode，自动选择可用 iPhone 模拟器（或显式 UDID），安装锁定依赖、运行 Example、Utilities、SafeKit 11 模式测试及 `pod lib lint --allow-warnings`。完整测试链路要求 Xcode 26+、iOS 26+ 模拟器，并提供 `xcresulttool get test-results tests`，测试结果必须非零且所有必需用例实际通过。产物默认放在被忽略的 `.artifacts/`。
 
 GitHub Actions 使用 macOS 15 runner，显式选择已安装的 Xcode 26 或更新版本、最新可用 iPhone runtime、固定 revision 的 actions 和 Ruby 3.3；只验证，不发布 CocoaPods。依赖下载仍需要网络。远程 Actions、真机及 iOS 15 runtime 的结果须与本地模拟器验证分别确认。
 
 ## 异常清理配置
 
 示例工程及 Podfile 中的 MYKit target 启用 `CLANG_ENABLE_OBJC_ARC_EXCEPTIONS=YES`。SafeKit 会捕获 Objective-C 异常，异常展开时也需要释放 ARC 局部引用；本次多余 KVO 移除测试在缺少此设置时观察到控制器未释放，启用后通过释放断言。此配置仅修正示例构建，本轮没有修改库 podspec；其他集成应单独核实异常清理设置。
+
+## GitHub Actions 并行验证
+
+远程使用五个独立的标准 macOS runner：Example＋Utilities、三组 SafeKit 模式、完整 CocoaPods lint。分组来自 `ci/lanes.json`，准备阶段核对每个模式恰好出现一次。每个 SafeKit 模式仍在独立测试进程运行；组内共享 DerivedData，组间不共享模拟器或构建目录。SafeKit 分组不安装仅供示例使用的 Pods。
+
+任一分组失败不会取消其他分组。最终 `test` 检查必须等准备和全部分组成功，并按“模式＋测试标识”核对实际结果树；失败、跳过、缺失、重复、错误提交的产物均不能通过。原有 Example 8、SafeKit 149、Utilities 12 次执行和全部 lint 保持不变，另增加 CI 调度与汇总器回归测试。
+
+`ci/run.sh` 默认仍运行本地全部验证，也可执行单个分组：
+
+```sh
+ci/run.sh /tmp/mykit-safekit-b --lane safekit-b
+python3 -m unittest discover -s ci -p 'test_*.py'
+```
+
+输出目录必须是新目录，避免旧结果混入。每组保存 `lane.json`、`timings.json` 和原始测试产物；Actions 的分组产物名为 `ios-validation-<分组>`，总验收结果为 `coverage-report`。实际提速受 runner 负载与并发排队影响；并行可能略增总 runner 分钟数，不代表减少测试工作量。

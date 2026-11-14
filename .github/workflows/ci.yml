@@ -9,12 +9,33 @@ concurrency:
   group: ios-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  test:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.partition.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+      - name: Test coverage gates and validate partition
+        id: partition
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python3 -m unittest discover -s ci -p 'test_*.py'
+          matrix="$(python3 ci/validation.py matrix)"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+  validate:
+    name: validate (${{ matrix.name }})
+    needs: prepare
     runs-on: macos-15
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
     steps:
       - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
       - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199
+        if: matrix.ruby
         with:
           ruby-version: '3.3'
           bundler-cache: true
@@ -34,15 +55,41 @@ jobs:
           with open(os.environ['GITHUB_ENV'], 'a') as output:
               output.write('DEVELOPER_DIR=' + max(candidates)[1] + '\n')
           PYTHON
-      - name: Build, test and lint
-        run: ci/run.sh "$RUNNER_TEMP/mykit-validation"
-      - name: Preserve validation evidence
+      - name: Run assigned validation lane
+        env:
+          CI_LANE: ${{ matrix.name }}
+        run: ci/run.sh "$RUNNER_TEMP/mykit-validation" --lane "$CI_LANE"
+      - name: Preserve lane evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
-          name: ios-validation
+          name: ios-validation-${{ matrix.name }}
           path: |
             ${{ runner.temp }}/mykit-validation
             !${{ runner.temp }}/mykit-validation/**/DerivedData*/**
+          if-no-files-found: error
+          retention-days: 7
+  test:
+    if: always()
+    needs: [prepare, validate]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          pattern: ios-validation-*
+          path: validation-artifacts
+      - name: Require every lane and every selected test
+        if: always()
+        env:
+          GITHUB_NEEDS: ${{ toJSON(needs) }}
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python3 ci/validation.py aggregate --artifacts validation-artifacts --sha "$GITHUB_SHA" --output coverage-report/summary.json
+      - name: Preserve coverage report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: coverage-report
+          path: coverage-report
           if-no-files-found: warn
           retention-days: 7

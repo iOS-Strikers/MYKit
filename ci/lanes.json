@@ -1,0 +1,7 @@
+[
+  {"name": "apps", "kind": "apps", "modes": []},
+  {"name": "safekit-a", "kind": "safekit", "modes": ["Native", "Null", "Notification", "Record"]},
+  {"name": "safekit-b", "kind": "safekit", "modes": ["KVO", "Container", "Timer"]},
+  {"name": "safekit-c", "kind": "safekit", "modes": ["Unknown", "All", "Reverse", "Concurrent"]},
+  {"name": "lint", "kind": "lint", "modes": []}
+]

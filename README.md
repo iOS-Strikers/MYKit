@@ -193,7 +193,7 @@ bundle exec pod install --deployment --project-directory=Example
 open Example/MYKit.xcworkspace
 ```
 
-选择 `MYKit-Example` scheme。完整本地验证执行 `ci/run.sh`；GitHub Actions 使用相同入口运行示例、SafeKit 11 模式、Utilities 测试及 CocoaPods lint。Pods 由锁文件恢复，不再提交生成代码。完整测试链路需要 Ruby 3.3+、Xcode 26+ 与 iOS 26+ 模拟器；详见 [示例说明](Example/README.md)。
+选择 `MYKit-Example` scheme。完整本地验证执行 `ci/run.sh`；GitHub Actions 使用相同入口分五路并行运行示例、SafeKit 11 模式、Utilities 测试及 CocoaPods lint；最终 `test` 检查逐模式核对全部 169 次测试执行与 lint 结果，缺失、跳过或失败均不能通过。Pods 由锁文件恢复，不再提交生成代码。完整测试链路需要 Ruby 3.3+、Xcode 26+ 与 iOS 26+ 模拟器；详见 [示例说明](Example/README.md)。
 
 ## 作者与许可证
 
