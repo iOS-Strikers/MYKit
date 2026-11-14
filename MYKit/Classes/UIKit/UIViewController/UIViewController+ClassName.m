@@ -10,10 +10,22 @@
 #import "UIDevice+Addition.h"
 #import "UIView+Position.h"
 #import "NSObject+Swizzle.h"
+#import "MYWindowContextInternal.h"
+#import <objc/runtime.h>
 
 #define kClassNameTag 20000
 
 static BOOL displayClassName = NO;
+static char MYClassNameLabelKey;
+
+// A scene may disconnect before debugging is disabled. Track owners weakly so
+// cleanup reaches every label without retaining its window.
+static NSHashTable<UIWindow *> *MYClassNameWindows(void) {
+    static NSHashTable<UIWindow *> *windows;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{ windows = [NSHashTable weakObjectsHashTable]; });
+    return windows;
+}
 
 @implementation UIViewController (ClassName)
 
@@ -37,29 +49,28 @@ static BOOL displayClassName = NO;
     [self yn_viewDidAppear:animated];
     
     if (displayClassName) {
-        [[self class] displayClassName];
+        [[self class] displayClassNameInWindow:self.view.window];
     }
 }
 
 + (void)displayClassName {
-    UIWindow *window = [self appWindow];
-    if (!window) {
-        window = [UIApplication sharedApplication].keyWindow;
-    }
-    UILabel *classNameLabel = nil;
-    if ([window viewWithTag:kClassNameTag]) {
-        classNameLabel = (UILabel *)[window viewWithTag:kClassNameTag];
-        [window bringSubviewToFront:classNameLabel];
-    } else {
+    [self displayClassNameInWindow:MYCurrentApplicationWindow()];
+}
+
++ (void)displayClassNameInWindow:(UIWindow *)window {
+    if (!window) return;
+    UILabel *classNameLabel = objc_getAssociatedObject(window, &MYClassNameLabelKey);
+    if (!classNameLabel) {
         classNameLabel = [[UILabel alloc] init];
         classNameLabel.frame = CGRectMake(5, 15, window.width, 20);
         classNameLabel.textColor = [UIColor redColor];
         classNameLabel.font = [UIFont systemFontOfSize:12];
         classNameLabel.tag = kClassNameTag;
+        objc_setAssociatedObject(window, &MYClassNameLabelKey, classNameLabel, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         [window addSubview:classNameLabel];
-        [window bringSubviewToFront:classNameLabel];
+        [MYClassNameWindows() addObject:window];
     }
-    
+    [window bringSubviewToFront:classNameLabel];
     classNameLabel.userInteractionEnabled = NO;
     
     const char *className = class_getName(self.class);
@@ -71,15 +82,13 @@ static BOOL displayClassName = NO;
 }
 
 + (void)removeClassName {
-    UIWindow *window = [self appWindow];
-    if (!window) {
-        window = [UIApplication sharedApplication].keyWindow;
+    NSArray<UIWindow *> *windows = MYClassNameWindows().allObjects;
+    for (UIWindow *window in windows) {
+        UILabel *label = objc_getAssociatedObject(window, &MYClassNameLabelKey);
+        [label removeFromSuperview];
+        objc_setAssociatedObject(window, &MYClassNameLabelKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    UILabel *classNameLabel = nil;
-    if ([window viewWithTag:kClassNameTag]) {
-        classNameLabel = (UILabel *)[window viewWithTag:kClassNameTag];
-        [classNameLabel removeFromSuperview];
-    }
+    [MYClassNameWindows() removeAllObjects];
 }
 
 + (BOOL)needDisplay:(NSString *)className {
@@ -90,11 +99,6 @@ static BOOL displayClassName = NO;
     } else {
         return YES;
     }
-}
-
-+ (UIWindow *)appWindow {
-    id<UIApplicationDelegate> appDelegate = [UIApplication sharedApplication].delegate;
-    return [appDelegate window];
 }
 
 @end

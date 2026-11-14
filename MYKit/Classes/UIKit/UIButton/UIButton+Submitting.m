@@ -33,7 +33,8 @@
     self.modalView.layer.borderColor = self.layer.borderColor;
     
     CGRect viewBounds = self.modalView.bounds;
-    self.spinnerView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    self.spinnerView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    self.spinnerView.color = UIColor.whiteColor;
     self.spinnerView.tintColor = self.titleLabel.textColor;
     self.spinnerView.frame = CGRectMake(10, 5, self.height - 10, self.height - 10);
     [self.modalView addSubview:self.spinnerView];

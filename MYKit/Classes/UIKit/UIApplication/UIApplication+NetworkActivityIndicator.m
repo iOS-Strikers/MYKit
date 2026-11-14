@@ -7,22 +7,29 @@
 //
 
 #import "UIApplication+NetworkActivityIndicator.h"
-#import <libkern/OSAtomic.h>
+#import <stdatomic.h>
 
 @implementation UIApplication (NetworkActivityIndicator)
 
-static volatile int32_t numberOfActiveNetworkConnections;
+static _Atomic(int32_t) numberOfActiveNetworkConnections;
 
 #pragma mark Public API
 
 - (void)beganNetworkActivity
 {
-    self.networkActivityIndicatorVisible = OSAtomicAdd32(1, &numberOfActiveNetworkConnections) > 0;
+    // Serialize the property update with the count, so an older write cannot win.
+    @synchronized (UIApplication.class) {
+        atomic_fetch_add_explicit(&numberOfActiveNetworkConnections, 1, memory_order_relaxed);
+        self.networkActivityIndicatorVisible = atomic_load_explicit(&numberOfActiveNetworkConnections, memory_order_relaxed) > 0;
+    }
 }
 
 - (void)endedNetworkActivity
 {
-    self.networkActivityIndicatorVisible = OSAtomicAdd32(-1, &numberOfActiveNetworkConnections) > 0;
+    @synchronized (UIApplication.class) {
+        atomic_fetch_sub_explicit(&numberOfActiveNetworkConnections, 1, memory_order_relaxed);
+        self.networkActivityIndicatorVisible = atomic_load_explicit(&numberOfActiveNetworkConnections, memory_order_relaxed) > 0;
+    }
 }
 
 @end

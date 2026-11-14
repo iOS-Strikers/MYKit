@@ -17,7 +17,8 @@ static NSString *const UIButton_ButtonTextObjectKey = @"UIButton_ButtonTextObjec
 
 - (void)showIndicator {
     
-    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    indicator.color = UIColor.whiteColor;
     indicator.center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
     [indicator startAnimating];
     

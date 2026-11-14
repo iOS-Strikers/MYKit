@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSDictionary (Addition)
 
 /**
@@ -15,7 +17,7 @@
  
  @return  JSON字符串
  */
-- (NSString *)JSONString;
+- (nullable NSString *)JSONString;
 
 - (NSArray<NSString *> *)arrayStringAscending;
 
@@ -25,7 +27,7 @@
  @param plist   A property list data whose root object is a dictionary.
  @return A new dictionary created from the binary plist data, or nil if an error occurs.
  */
-+ (nullable NSDictionary *)dictionaryWithPlistData:(NSData *)plist;
++ (nullable NSDictionary *)dictionaryWithPlistData:(nullable NSData *)plist;
 
 /**
  Creates and returns a dictionary from a specified property list xml string.
@@ -35,7 +37,7 @@
  
  @discussion Apple has implemented this method, but did not make it public.
  */
-+ (nullable NSDictionary *)dictionaryWithPlistString:(NSString *)plist;
++ (nullable NSDictionary *)dictionaryWithPlistString:(nullable NSString *)plist;
 
 /**
  Serialize the dictionary to a binary property list data.
@@ -78,7 +80,7 @@
  
  @param key The key.
  */
-- (BOOL)containsObjectForKey:(id)key;
+- (BOOL)containsObjectForKey:(nullable id)key;
 
 /**
  Returns a new dictionary containing the entries for keys.
@@ -87,7 +89,7 @@
  @param keys The keys.
  @return The entries for the keys.
  */
-- (NSDictionary *)entriesForKeys:(NSArray *)keys;
+- (NSDictionary *)entriesForKeys:(nullable NSArray *)keys;
 
 /**
  Convert dictionary to json string. return nil if an error occurs.
@@ -100,3 +102,5 @@
 - (nullable NSString *)jsonPrettyStringEncoded;
 
 @end
+
+NS_ASSUME_NONNULL_END

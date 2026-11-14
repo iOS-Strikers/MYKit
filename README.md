@@ -193,3 +193,13 @@ python3 Tests/run-tests.py \
 作者：sunjinshuai — sunjinshuai@aikucun.com。
 
 本项目使用 [MIT 许可证](LICENSE)。
+
+## 工具类兼容性说明
+
+- 窗口、顶层控制器、状态栏尺寸及调试类名标签接口应在主线程调用。全局查询只选择唯一的前台活跃场景中可见、普通级别的 key window；存在多个候选时返回 nil/0。有具体视图上下文时应使用该视图的 window。旧 AppDelegate 生命周期仍使用 delegate.window 和原生状态栏高度。
+- `setButtonImageTitleStyle:padding:` 仅适用于 `configuration == nil` 的旧式 UIButton。十种图文布局继续保留原实现，不自动转换成 UIButtonConfiguration。
+- MD2/MD4/MD5 方法只用于兼容已有摘要、协议和标识符，不用于密码存储或安全校验；新摘要需求可使用现有 SHA256 方法。
+- `getCarrierName` 依赖已经废弃且没有等价替代的运营商接口，现代系统可能不再提供真实运营商名称。
+- `beganNetworkActivity` / `endedNetworkActivity` 保留计数与旧属性状态，但 iOS 15 不再显示旧状态栏网络图标。需要可见加载反馈时由应用自身提供 UI。
+
+本轮编译警告处置及验证见 [修复记录](docs-ai/002-compiler-warnings/001-action.md)。

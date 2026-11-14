@@ -10,15 +10,13 @@
 
 @interface UIApplication (NetworkActivityIndicator)
 
-/*
- This category will automatically keep track of concurrent network activity and display the network activity indicator accordingly.
+/**
+ Legacy network-activity state bookkeeping. iOS 13 and later do not display the
+ old status-bar indicator. These methods retain the observable property updates
+ for callers that still read networkActivityIndicatorVisible; use app-owned UI
+ for visible progress. Balance every begin with an end.
  */
-
-/// Tell the application that network activity has begun. The network activity indicator will then be shown.
-/// Display the network activity indicator to provide feedback when your application accesses the network for more than a couple of seconds. If the operation finishes sooner than that, you don’t have to show the network activity indicator, because the indicator would be likely to disappear before users notice its presence.
 - (void)beganNetworkActivity;
-
-/// Tell the application that a session of network activity has begun. The network activity indicator will remain showing or hide automatically depending the presence of other ongoing network activity in the app.
 - (void)endedNetworkActivity;
 
 @end

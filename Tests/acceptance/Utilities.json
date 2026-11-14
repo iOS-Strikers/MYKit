@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "criteria": [
+    {
+      "id": "testCameraPermissionUsesVideoAuthorization",
+      "required": true,
+      "tests": [
+        "UtilitiesTests/testCameraPermissionUsesVideoAuthorization"
+      ]
+    },
+    {
+      "id": "testButtonIndicatorUsesModernStyleAndRestoresState",
+      "required": true,
+      "tests": [
+        "UtilitiesTests/testButtonIndicatorUsesModernStyleAndRestoresState"
+      ]
+    },
+    {
+      "id": "testPlistNilInvalidAndRoundTrips",
+      "required": true,
+      "tests": [
+        "UtilitiesTests/testPlistNilInvalidAndRoundTrips"
+      ]
+    },
+    {
+      "id": "testBitmapColorAndGrayConversion",
+      "required": true,
+      "tests": [
+        "UtilitiesTests/testBitmapColorAndGrayConversion"
+      ]
+    },
+    {
+      "id": "testWindowSelectionPolicy",
+      "required": true,
+      "tests": [
+        "UtilitiesTests/testWindowSelectionPolicy"
+      ]
+    },
+    {
+      "id": "testSceneWindowIntegrationAndClassLabelCleanup",
+      "required": true,
+      "tests": [
+        "UtilitiesTests/testSceneWindowIntegrationAndClassLabelCleanup"
+      ]
+    },
+    {
+      "id": "testNetworkBalancedAndConcurrentState",
+      "required": true,
+      "tests": [
+        "UtilitiesTests/testNetworkBalancedAndConcurrentState"
+      ]
+    },
+    {
+      "id": "testLoadingViewsAndVisualEvidence",
+      "required": true,
+      "tests": [
+        "UtilitiesTests/testLoadingViewsAndVisualEvidence"
+      ]
+    },
+    {
+      "id": "testClassNameCleanupAfterSceneDisconnect",
+      "required": true,
+      "tests": [
+        "UtilitiesTests/testClassNameCleanupAfterSceneDisconnect"
+      ]
+    },
+    {
+      "id": "testLegacyStatusBarFallbackMatchesNative",
+      "required": true,
+      "tests": [
+        "UtilitiesTests/testLegacyStatusBarFallbackMatchesNative"
+      ]
+    },
+    {
+      "id": "testNetworkNativeGetterParity",
+      "required": true,
+      "tests": [
+        "UtilitiesTests/testNetworkNativeGetterParity"
+      ]
+    },
+    {
+      "id": "testLocationAndContactsPermissionQueries",
+      "required": true,
+      "tests": [
+        "UtilitiesTests/testLocationAndContactsPermissionQueries"
+      ]
+    }
+  ]
+}

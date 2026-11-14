@@ -21,7 +21,8 @@ static void *ANSubstitutedViewAssociationKey = &ANSubstitutedViewAssociationKey;
     // hold reference for position to stop at the right place
     objc_setAssociatedObject(self, ANLoaderPositionAssociationKey, @(position), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    UIActivityIndicatorView* loader = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    UIActivityIndicatorView* loader = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    loader.color = UIColor.grayColor;
     
     // substitute bar views to loader and hold reference to them for restoration
     switch (position) {

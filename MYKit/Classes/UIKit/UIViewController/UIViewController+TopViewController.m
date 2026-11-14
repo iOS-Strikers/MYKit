@@ -7,13 +7,14 @@
 //
 
 #import "UIViewController+TopViewController.h"
+#import "MYWindowContextInternal.h"
 
 @implementation UIViewController (TopViewController)
 
 + (UIViewController *)topViewController {
-    UIViewController *resultVC;
+    UIViewController *resultVC = nil;
 #if TARGET_OS_IOS
-    resultVC = [self _topViewController:[[UIApplication sharedApplication].keyWindow rootViewController]];
+    resultVC = [self _topViewController:[MYCurrentApplicationWindow() rootViewController]];
     while (resultVC.presentedViewController) {
         resultVC = [self _topViewController:resultVC.presentedViewController];
     }

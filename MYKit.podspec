@@ -44,6 +44,7 @@ Pod::Spec.new do |s|
   
   s.subspec 'UIKit' do |kit|
     kit.source_files = 'MYKit/Classes/UIKit/MYUIKit.h', 'MYKit/Classes/UIKit/**/*'
+    kit.private_header_files = 'MYKit/Classes/UIKit/UIWindow/MYWindowContextInternal.h'
     kit.dependency 'MYKit/Foundation'
   end
   

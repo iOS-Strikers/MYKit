@@ -127,7 +127,7 @@ static NSTimeInterval _my_CGImageSourceGetGIFFrameDelayAtIndex(CGImageSourceRef 
             return nil;
         }
         
-        CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(imageRef) & kCGBitmapAlphaInfoMask;
+        CGImageAlphaInfo alphaInfo = (CGImageAlphaInfo)((CGBitmapInfo)CGImageGetAlphaInfo(imageRef) & kCGBitmapAlphaInfoMask);
         BOOL hasAlpha = NO;
         if (alphaInfo == kCGImageAlphaPremultipliedLast ||
             alphaInfo == kCGImageAlphaPremultipliedFirst ||

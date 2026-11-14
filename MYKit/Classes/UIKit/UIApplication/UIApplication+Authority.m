@@ -10,45 +10,24 @@
 #import <CoreLocation/CoreLocation.h>
 #import <Photos/Photos.h>
 #import <Contacts/Contacts.h>
-#import <AddressBook/AddressBook.h>
+#import <AVFoundation/AVFoundation.h>
 #import <EventKit/EventKit.h>
 
 @implementation UIApplication (Authority)
 
 #pragma mark - 权限查询
+// Querying authorization does not request permission.
 + (BOOL)getApplicationLocationPermit {
-    
-    BOOL authorizedAlways    = [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways;
-    BOOL authorizedWhenInUse = [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse;
-    
-    if (authorizedAlways || authorizedWhenInUse) {
-        return YES;
-    }
-    
-    return NO;
+    CLAuthorizationStatus status = [[CLLocationManager new] authorizationStatus];
+    return status == kCLAuthorizationStatusAuthorizedAlways || status == kCLAuthorizationStatusAuthorizedWhenInUse;
 }
 
 + (BOOL)getApplicationAddressBookPermit {
-    
-    if (@available(iOS 9.0, *)) {
-        
-        BOOL authorizationStatusAuthorized = [CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts] == CNAuthorizationStatusAuthorized;
-        
-        return authorizationStatusAuthorized;
-        
-    } else {
-        
-        BOOL authorizationStatusAuthorized = ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized;
-        
-        return authorizationStatusAuthorized;
-    }
+    return [CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts] == CNAuthorizationStatusAuthorized;
 }
 
 + (BOOL)getApplicationCameraPermit {
-    
-    BOOL authorizationStatusAuthorized = [EKEventStore authorizationStatusForEntityType:EKEntityTypeEvent] == EKAuthorizationStatusAuthorized;
-    
-    return authorizationStatusAuthorized;
+    return [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] == AVAuthorizationStatusAuthorized;
 }
 
 + (BOOL)getApplicationRemindersPermit {

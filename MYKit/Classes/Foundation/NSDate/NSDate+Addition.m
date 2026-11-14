@@ -486,9 +486,9 @@
 /**
  获取时间字符串，指定 dataFormat
  
- @param date
- @param dataFormat
- @return
+ @param date 待格式化的日期
+ @param dataFormat 日期格式；nil 时使用 yyyy-MM-dd
+ @return 格式化后的日期字符串
  */
 + (NSString *)stringFromDate:(NSDate *)date setDateFormat:(NSString *)dataFormat {
     //用于格式化NSDate对象
@@ -506,9 +506,9 @@
 /**
  获取 NSDate，指定 dataFormat
  
- @param dateString
- @param dataFormat
- @return
+ @param dateString 待解析的日期字符串
+ @param dataFormat 日期格式；nil 时使用 yyyy-MM-dd
+ @return 解析的日期；解析失败时为 nil
  */
 + (nullable NSDate *)dateFromString:(NSString *)dateString setDateFormat:(NSString *)dataFormat {
     
@@ -526,7 +526,7 @@
  获取当前时间字符串，指定 dataFormat
  
  @param format @"yyyy-MM-dd HH:mm:ss"、@"yyyy年MM月dd日 HH时mm分ss秒"
- @return
+ @return 按指定格式生成的当前日期字符串
  */
 + (NSString *)currentDateWithFormat:(NSString *)format {
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -537,8 +537,8 @@
 /**
  计算两个时间戳的差值
  
- @param timestamp
- @param anotherTimestamp
+ @param timestamp 毫秒时间戳；为 0 时使用当前时间
+ @param anotherTimestamp 用于相减的毫秒时间戳
  @return 差值
  */
 + (NSInteger)differenceOfTimestamp:(NSInteger)timestamp anotherTimestamp:(NSInteger)anotherTimestamp {
@@ -556,9 +556,9 @@
 /**
  根据时间戳计算距离现在的时间
  
- @param lastTime
- @param currentTime
- @return
+ @param lastTime 起始日期
+ @param currentTime 比较日期
+ @return 时间间隔的可读描述
  */
 + (NSString *)timeIntervalFromLastTime:(NSDate *)lastTime ToCurrentTime:(NSDate *)currentTime {
     NSTimeZone *timeZone = [NSTimeZone systemTimeZone];

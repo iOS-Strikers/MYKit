@@ -7,6 +7,7 @@
 //
 
 #import "UIScreen+Addition.h"
+#import "MYWindowContextInternal.h"
 
 static const CGFloat DefaultScreenWidth = 750.0/2;
 
@@ -51,15 +52,18 @@ static const CGFloat DefaultScreenHeight = 1134.0/2;
 #pragma mark - iphone ui design value
 
 + (CGFloat)statusBarHeight {
-    CGRect statusRect = [[UIApplication sharedApplication] statusBarFrame];
-    return statusRect.size.height;
+    UIWindow *window = MYCurrentApplicationWindow();
+    if (!window) return 0;
+    if (window.windowScene) return window.windowScene.statusBarManager.statusBarFrame.size.height;
+    // Legacy AppDelegate windows have no scene; preserve their native status bar value.
+    return UIApplication.sharedApplication.statusBarFrame.size.height;
 }
 
 + (CGFloat)navigationBarHeight {
     
     CGFloat statusBarHeight = [UIScreen statusBarHeight];
     CGFloat navigationBarHeight = 0.0;
-    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *rootViewController = MYCurrentApplicationWindow().rootViewController;
     if ([rootViewController isKindOfClass:[UITabBarController class]]) {
         UITabBarController *tabBarController = (UITabBarController *)rootViewController;
         UIViewController *tabBarFirstController = tabBarController.viewControllers.firstObject;
@@ -80,7 +84,7 @@ static const CGFloat DefaultScreenHeight = 1134.0/2;
 }
 
 + (CGFloat)tabBarHeight {
-    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *rootViewController = MYCurrentApplicationWindow().rootViewController;
     if ([rootViewController isKindOfClass:[UITabBarController class]]) {
         UITabBarController *tabBarController = (UITabBarController *)rootViewController;
         return CGRectGetHeight(tabBarController.tabBar.frame);

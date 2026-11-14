@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSArray (Addition)
 
 /**
  *  转换成JSON的NSString
  */
-- (NSString *)arrayToJson;
+- (nullable NSString *)arrayToJson;
 
 /**
  Creates and returns an array from a specified property list data.
@@ -21,7 +23,7 @@
  @param plist   A property list data whose root object is an array.
  @return A new array created from the binary plist data, or nil if an error occurs.
  */
-+ (nullable NSArray *)arrayWithPlistData:(NSData *)plist;
++ (nullable NSArray *)arrayWithPlistData:(nullable NSData *)plist;
 
 /**
  Creates and returns an array from a specified property list xml string.
@@ -29,7 +31,7 @@
  @param plist   A property list xml string whose root object is an array.
  @return A new array created from the plist string, or nil if an error occurs.
  */
-+ (nullable NSArray *)arrayWithPlistString:(NSString *)plist;
++ (nullable NSArray *)arrayWithPlistString:(nullable NSString *)plist;
 
 /**
  Serialize the array to a binary property list data.
@@ -65,3 +67,5 @@
 - (nullable NSString *)jsonPrettyStringEncoded;
 
 @end
+
+NS_ASSUME_NONNULL_END
