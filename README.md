@@ -1,39 +1,38 @@
 # MYKit
 
-Objective-C utilities for iOS, with Foundation extensions, UIKit helpers, and
-opt-in protection for selected exception-prone operations.
+面向 iOS 的 Objective-C 工具库，提供 Foundation 扩展、UIKit 辅助功能，以及按需启用的异常防护。
 
-## Modules
+## 模块划分
 
-| CocoaPods subspec | Contents |
+| CocoaPods 子模块 | 内容 |
 | --- | --- |
-| `Core` (default) | Umbrella headers and the Foundation, UIKit, and SafeKit modules |
-| `Foundation` | Foundation extensions for collections, strings, dates, data, and runtime helpers |
-| `UIKit` | UIKit extensions; depends on Foundation |
-| `SafeKit` | Container/KVC, KVO, notification, timer, unknown-selector, and NSNull protection; depends on Foundation |
+| `Core`（默认） | 统一入口头文件，以及 Foundation、UIKit、SafeKit 三个模块 |
+| `Foundation` | 集合、字符串、日期、数据及运行时等 Foundation 扩展 |
+| `UIKit` | UIKit 扩展，依赖 Foundation 模块 |
+| `SafeKit` | 容器/KVC、KVO、通知、定时器、未知方法及 NSNull 防护，依赖 Foundation 模块 |
 
-Source: [`MYKit/Classes`](MYKit/Classes). Specification: [`MYKit.podspec`](MYKit.podspec).
-SafeKit is opt-in: linking the library does not enable its protection hooks.
+源码位于 [`MYKit/Classes`](MYKit/Classes)，模块配置见 [`MYKit.podspec`](MYKit.podspec)。
+SafeKit 需要显式启用，仅链接库不会自动安装防护 Hook。
 
-## Version and platform status
+## 版本与平台状态
 
-The SafeKit review and fixes are merged into `master` in
-[`8d2aa2a`](https://github.com/iOS-Strikers/MYKit/commit/8d2aa2ab40261a15e12498eaa60fd34263ded01d).
-The podspec still declares **1.1.3**, and the existing `1.1.3` Git tag points to
-code **before** these fixes. No new CocoaPods release was made as part of this work.
-Use the pinned source revision below to obtain the reviewed implementation.
+SafeKit 的审查与修复已通过提交
+[`8d2aa2a`](https://github.com/iOS-Strikers/MYKit/commit/8d2aa2ab40261a15e12498eaa60fd34263ded01d)
+合入 `master`。
 
-| Item | Status |
+podspec 中的版本号仍为 **1.1.3**，现有 Git 标签 `1.1.3` 指向**修复前**的代码。本次工作未发布新的 CocoaPods 版本。需要使用已审查的实现时，请按下方示例固定到对应提交。
+
+| 项目 | 状态 |
 | --- | --- |
-| Library deployment declaration | iOS 8.0 in the podspec; retained, not newly validated |
-| Independent XCTest host | iOS 15.0 deployment target; no CocoaPods dependencies |
-| Verified environment | Xcode 27.2 (27B52), iPhone 17 Pro simulator, iOS 26.5 (23F77), arm64 |
-| Test tooling | Full Xcode, an available iOS simulator, and Python 3 |
-| Not verified in this revision | Physical devices, older iOS versions, and combinations with other swizzling libraries |
+| 库声明的最低系统版本 | podspec 保留 iOS 8.0 声明，本次未重新验证该版本兼容性 |
+| 独立 XCTest 宿主 | 最低部署版本为 iOS 15.0，不依赖 CocoaPods |
+| 已验证环境 | Xcode 27.2（27B52）、iPhone 17 Pro 模拟器、iOS 26.5（23F77）、arm64 |
+| 测试工具要求 | 完整 Xcode、可用的 iOS 模拟器和 Python 3 |
+| 本次未验证 | 真机、旧版 iOS，以及与其他方法交换库组合使用的情况 |
 
-## Installation
+## 安装
 
-To use only SafeKit from the reviewed source revision:
+仅接入已审查版本的 SafeKit：
 
 ```ruby
 pod 'MYKit/SafeKit',
@@ -41,20 +40,18 @@ pod 'MYKit/SafeKit',
     :commit => '8d2aa2ab40261a15e12498eaa60fd34263ded01d'
 ```
 
-For all modules, use `MYKit` instead of `MYKit/SafeKit`. For a local checkout:
+需要全部模块时，将 `MYKit/SafeKit` 改为 `MYKit`。也可以引用本地仓库：
 
 ```ruby
 pod 'MYKit/SafeKit', :path => '../MYKit'
 ```
 
-Choose one source configuration, then run `pod install` in your application project.
-The historical version-based installation (`pod 'MYKit', '1.1.3'`) does not select
-the new source revision.
+选择一种来源配置，然后在应用工程中执行 `pod install`。
+按旧版本号安装（`pod 'MYKit', '1.1.3'`）不会选中本次修复后的源码。
 
-## Quick start
+## 快速接入
 
-Register a reporter and enable the abilities needed by your application, ideally
-before the operations you want protected:
+注册错误上报对象，并按需开启防护。建议在需要保护的业务操作开始前完成注册：
 
 ```objc
 #import <MYKit/MYSafeKit.h>
@@ -68,106 +65,95 @@ before the operations you want protected:
 }
 @end
 
-// In application startup code:
+// 放在应用启动逻辑中：
 [MYSafeKit registerRecordHandler:[AppSafeKitReporter new]];
 [MYSafeKit registerSafeKitShieldWithAbility:
     MYSafeKitShieldTypeContainer | MYSafeKitShieldTypeKVO];
 ```
 
-`registerSafeKitShield` enables `MYSafeKitShieldTypeAll`. It does not promise recovery
-from every crash. The reporter is retained; passing nil to `registerRecordHandler:`
-clears the reporter, not the installed protection hooks.
+调用 `registerSafeKitShield` 相当于启用 `MYSafeKitShieldTypeAll`，但不代表可以恢复所有崩溃。
+库会持有上报对象；向 `registerRecordHandler:` 传入 `nil` 只会清除上报对象，不会撤销已安装的防护 Hook。
 
-## SafeKit protection contract
+## SafeKit 防护行为与边界
 
-Enable only the abilities needed by the application. Registration is process-wide,
-additive and irreversible; repeated registration is idempotent. `All` includes all
-six abilities, but does not mean that arbitrary crashes can be recovered.
+只开启应用需要的防护能力。注册对整个进程生效，可以追加能力，不能撤销；重复注册是幂等操作。
+`All` 包含全部六类防护，但不提供任意崩溃恢复保证。
 
-| Ability | Supported behavior | Boundaries |
+| 防护能力 | 支持行为 | 使用边界 |
 | --- | --- | --- |
-| Container | Array/dictionary construction, sampled Foundation class-cluster reads and mutations, strings, default NSObject KVC handling | Invalid object reads return nil, invalid character reads return 0, failed searches return NSNotFound. Invalid writes are rejected as a whole. Nil construction elements/pairs are filtered. Invalid C pointers, concurrent collection mutation, arbitrary custom subclasses and every future private Foundation class are not covered. |
-| KVO | Separate registrations per observer/keyPath/context, duplicate observations, native options, matching removal, observer/observed cleanup | Client callback exceptions propagate. Initial callbacks precede installation, as verified on iOS 26.5; an exception leaves no new registration. Removal before that installation is an unmatched removal: reported/no-op. Existing observations created before activation can still be removed. Custom implementations that never call NSObject's KVO methods are outside the hook. |
-| Notification | Selector observation cleanup, weak deduplicated notification-center tracking | Block observer tokens keep their native lifecycle and must be removed by the caller. |
-| Timer | Repeating timers created by the two target/selector factory APIs use weak targets; the next fire after target destruction invalidates the timer | Single-shot timers retain native semantics. Block timers and direct initializers are not wrapped. Weak targets are an intentional ownership change: retain a target elsewhere if it must stay alive. |
-| UnrecognizedSelector | Explicitly registered, exact-class, typed fallback only | Unregistered selectors keep native failure behavior. Existing resolution/forwarding and custom forwarding exceptions take precedence. This cannot infer a method signature from its name. |
-| Null | Fixed, typed selector allowlist | Not equivalent to sending any message to nil. Nonallowlisted messages retain the original forwarding behavior. |
+| Container | 数组/字典构造、已采样 Foundation 类簇的读取与修改、字符串操作、NSObject 默认 KVC 处理 | 非法对象读取返回 `nil`，非法字符读取返回 `0`，查找失败返回 `NSNotFound`；非法写入整批拒绝；构造时过滤 `nil` 元素或键值对。不覆盖无效 C 指针、集合并发修改、任意自定义子类，也不保证覆盖未来所有 Foundation 私有类。 |
+| KVO | 按 observer/keyPath/context 独立登记，支持重复观察、原生选项、匹配移除和观察双方释放清理 | 业务回调异常继续向外抛出。iOS 26.5 对照确认，`Initial` 回调发生在新监听安装之前，回调抛异常时不会留下新登记；安装前移除该新监听属于无匹配移除，会记录错误并忽略。启用防护前已有的原生监听仍可移除。不调用 NSObject KVO 方法的自定义实现不在 Hook 范围内。 |
+| Notification | 清理 selector 形式的通知监听，以弱引用记录通知中心并去重 | block 监听 token 保留原生生命周期，调用方仍需负责移除。 |
+| Timer | 两个 target/selector 工厂方法创建的重复定时器使用弱 target；target 释放后，下一次触发会使定时器失效 | 单次定时器保持原生语义；不包装 block 定时器和直接初始化方法。弱 target 是有意的持有关系变化，需要保证其存活时，应由其他对象持有。 |
+| UnrecognizedSelector | 仅对显式登记、运行时类精确匹配且具有明确类型签名的方法进行兜底 | 未登记的方法保持原生失败行为。已有动态解析、消息转发及自定义转发异常优先；不能从方法名推断真实签名。 |
+| Null | 使用固定且具有真实类型签名的 selector 白名单 | 不等同于向 `nil` 发送任意消息。白名单之外的消息保留原有转发行为。 |
 
-### Compatibility changes
+### 兼容性变化
 
-The old generic unknown-selector `int` stub was ABI-unsafe. Applications that
-previously relied on swallowing arbitrary unknown methods must migrate to explicit
-registration. This is a behavior change in `master`; the podspec version has not been
-bumped and no new release tag was created for these changes.
+旧版未知方法防护使用统一返回 `int` 的占位实现，存在 ABI 不匹配风险。此前依赖“吞掉任意未知方法”的应用，需要迁移到显式签名登记。
+这是 `master` 中的行为变化；podspec 版本尚未提升，也未为这些变更创建新的发布标签。
 
 ```objc
-// The caller MUST guarantee this is the actual encoding of a non-variadic call.
-// Registration does not independently prove the ABI. Pass a metaclass for class methods.
+// 调用方必须保证编码与真实调用一致，且方法不使用可变参数。
+// 注册校验无法独立证明 ABI 正确；登记类方法时传入元类。
 BOOL accepted = [MYSafeKit registerFallbackForClass:[MyModel class]
                                          selector:NSSelectorFromString(@"optionalDouble")
                                      typeEncoding:"d@:"];
 [MYSafeKit registerSafeKitShieldWithAbility:MYSafeKitShieldTypeUnrecognizedSelector];
 ```
 
-The registry validates encoding syntax, supported types and argument count. It
-rejects conflicting signatures, existing selectors, unions, arrays, bitfields,
-opaque structures and unsupported encodings. It cannot detect variadic calls from
-an encoding or validate a dishonest encoding. Supported return values are cleared
-using the registered return size; no implementation is permanently added for the
-missing selector. Registration matches the actual runtime class, not all subclasses.
+注册时会校验编码语法、支持的类型和参数数量，拒绝冲突签名、已有方法、联合体、数组、位域、不透明结构体及其他不支持的编码。
+编码本身无法证明真实调用的 ABI，也无法识别调用方是否使用了可变参数。
 
-Legal dictionary subscript assignment to nil now deletes the key; KVC can clear
-object properties; substring endpoints equal to length and empty strings retain
-Foundation behavior. Invalid string writes no longer truncate and partially modify
-data. KVC behavior is no longer changed merely by linking MYKit.
+支持的返回值按登记签名的返回长度清零；不会为缺失的 selector 永久添加方法实现。
+登记只匹配实际运行时类，不会自动覆盖所有子类。
 
-### NSNull allowlist
+其他行为修复包括：
 
-Every fallback below reports one Null event (except events suppressed by record
-reentry protection). Parameters are not dereferenced or forwarded into an empty
-collection. The same defined fallback applies to nil keys and out-of-range indices.
+- 字典下标赋 `nil` 恢复为删除对应键。
+- KVC 可以正常清空对象属性，仅链接 MYKit 不再改变 KVC 行为。
+- 字符串截取位置等于长度、空字符串等合法边界保持 Foundation 行为。
+- 非法字符串写入不再通过截断范围来部分修改数据。
 
-| Selectors | Result |
+### NSNull 白名单
+
+下列每次兜底都会记录一次 Null 事件，上报重入保护抑制的事件除外。
+参数不会被解引用，也不会被转发到空集合执行；`nil` 键和越界索引同样使用表中规定的返回值。
+
+| selector | 返回值 |
 | --- | --- |
-| `length`, `count` | NSUInteger 0 |
-| `intValue`, `integerValue`, `longLongValue`, `unsignedLongLongValue`, `doubleValue`, `floatValue`, `boolValue` | Zero/NO of the actual return type |
-| `objectForKey:`, `objectForKeyedSubscript:`, `objectAtIndex:`, `objectAtIndexedSubscript:` | nil |
-| `characterAtIndex:` | unichar 0 |
-| `substringFromIndex:`, `substringToIndex:`, `substringWithRange:` | nil |
+| `length`、`count` | `NSUInteger` 类型的 `0` |
+| `intValue`、`integerValue`、`longLongValue`、`unsignedLongLongValue`、`doubleValue`、`floatValue`、`boolValue` | 按实际返回类型返回 `0` 或 `NO` |
+| `objectForKey:`、`objectForKeyedSubscript:`、`objectAtIndex:`、`objectAtIndexedSubscript:` | `nil` |
+| `characterAtIndex:` | `unichar` 类型的 `0` |
+| `substringFromIndex:`、`substringToIndex:`、`substringWithRange:` | `nil` |
 
-### Reporting
+### 错误上报
 
-Handlers are retained and receive errors synchronously on the triggering thread;
-implementations must support concurrent calls. Handler replacement is synchronized,
-callbacks run without the handler lock, same-thread recursive events are suppressed,
-and handler exceptions are isolated. Errors retain the original `com.xxshield.<bundle identifier>` domain, a negative
-ability code, a description, and at most 32 stack frames under `callStack`.
-The deprecated alert helper dispatches to the main queue and is not a
-default reporting mechanism. Do not perform recovery requiring a live UI from a
-report callback.
+上报对象由库持有，并在触发防护的线程上同步接收错误，因此实现必须支持并发调用。
+替换上报对象时有同步保护；执行回调时不持有上报对象锁。同线程的递归上报会被抑制，上报对象自身抛出的异常会被隔离。
 
-## Tests and verification
+错误信息保留原有的 `com.xxshield.<bundle identifier>` 错误域，使用防护能力值的负数作为错误码，并包含错误描述和 `callStack` 字段；调用栈最多保留 32 帧。
 
-The latest recorded review run used **29 test methods across 11 process-isolated
-configurations: 149 executions, all passed, with no skipped or missing cases**.
-Two independent code-review rounds completed, with the final review clean. These
-are recorded results for the reviewed source revision, not a live CI badge.
-Implementation and acceptance details: [delivery record](docs-ai/001-safekit-review/001-action.md).
-That record captures the validation-time state; current merge and version status
-are described above.
+已弃用的弹窗辅助 API 会调度到主线程执行，不是默认上报机制。不要在错误上报回调中执行依赖可用 UI 的恢复操作。
 
-The independent [`Tests/SafeKitTests.xcodeproj`](Tests/SafeKitTests.xcodeproj) builds
-a minimal app host, XCTest bundle, and a separate framework fixture. It does not
-require the legacy Example project or `pod install`.
+## 测试与验证
 
-From the repository root, select an available simulator:
+最近一次有记录的验证包含 **29 个测试方法、11 种进程隔离配置，共执行 149 次，全部通过，无跳过或缺失用例**。
+已完成两轮独立代码审查，最终无未解决问题。这些是对应源码版本的验证记录，不代表实时 CI 状态。
+
+实现与验收细节见[交付记录](docs-ai/001-safekit-review/001-action.md)。该记录描述验收时的状态；当前合并与版本状态以上文说明为准。
+
+独立工程 [`Tests/SafeKitTests.xcodeproj`](Tests/SafeKitTests.xcodeproj) 包含最小应用宿主、XCTest 测试包和独立 framework 测试模块，不依赖旧版 Example 工程，也无需执行 `pod install`。
+
+在仓库根目录选择可用模拟器：
 
 ```sh
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 xcrun simctl list devices available
 ```
 
-Then replace `YOUR_SIMULATOR_UDID` and run the full matrix:
+将 `YOUR_SIMULATOR_UDID` 替换为实际模拟器标识，然后运行完整矩阵：
 
 ```sh
 python3 Tests/run-tests.py \
@@ -175,8 +161,8 @@ python3 Tests/run-tests.py \
   --output /tmp/mykit-results
 ```
 
-**The output directory must not already exist.** Choose a fresh path for every run;
-previous evidence is not overwritten. To select individual modes:
+**输出目录必须尚不存在。** 每次运行使用新路径，避免覆盖已有证据。
+也可以仅运行指定模式：
 
 ```sh
 python3 Tests/run-tests.py \
@@ -185,34 +171,27 @@ python3 Tests/run-tests.py \
   --output /tmp/mykit-container-kvo-results
 ```
 
-| Configuration | Purpose |
+| 配置 | 验证目的 |
 | --- | --- |
-| `Native` | Unprotected Foundation behavior, including KVO reference semantics |
-| `Container`, `KVO`, `Unknown`, `Null`, `Notification`, `Timer`, `Record` | Individual capability and reporting verification |
-| `All` | Combined protections |
-| `Reverse` | Reverse capability registration order |
-| `Concurrent` | Concurrent first-time installation of all protections |
+| `Native` | 未启用防护时的 Foundation 行为，包括 KVO 原生语义对照 |
+| `Container`、`KVO`、`Unknown`、`Null`、`Notification`、`Timer`、`Record` | 各项能力及上报机制的独立验证 |
+| `All` | 全部防护组合运行 |
+| `Reverse` | 反向注册防护能力 |
+| `Concurrent` | 首次并发安装全部防护 |
 
-The runner uses [`Tests/matrix.json`](Tests/matrix.json) to select exact cases and
-requires every selected case to pass. Missing/skipped cases fail the run. Standard
-runs write `summary.json`, per-mode commands/logs/test trees and `.xcresult` bundles,
-plus shared DerivedData under the chosen output directory. The
-[`acceptance`](Tests/acceptance) directory provides explicit contracts for the
-optional evidence-verifier integration.
+运行脚本按照 [`Tests/matrix.json`](Tests/matrix.json) 选择精确用例，要求所有选定用例通过；缺失或跳过用例都会判定失败。
+标准运行会在输出目录中保存 `summary.json`、各模式的命令、日志、测试结果树和 `.xcresult`，以及共享的 DerivedData。
+[`acceptance`](Tests/acceptance) 目录提供逐项验收清单，供可选的证据验证器集成使用。
 
-The checked-in Xcode project can be used directly. Only when changing its source
-membership, regenerate it with `ruby Tests/generate-project.rb`; that maintenance
-step requires the `xcodeproj` Ruby gem.
+仓库已包含可直接使用的 Xcode 工程。只有调整工程包含的源文件时，才需要运行 `ruby Tests/generate-project.rb` 重新生成；该维护步骤依赖 Ruby 的 `xcodeproj` gem。
 
-## Legacy example
+## 旧版示例工程
 
-[`Example`](Example) contains the original demonstration application and CocoaPods
-configuration. Its iOS 8 deployment settings are incompatible with the verified
-Xcode 27.2 toolchain, so it is not the current validation entry point. Use the
-independent test project above to reproduce the current SafeKit verification.
+[`Example`](Example) 保留了原始演示应用和 CocoaPods 配置。
+其 iOS 8 部署设置与本次使用的 Xcode 27.2 工具链不兼容，因此不是当前的验收入口。复现本次 SafeKit 验证时，请使用上述独立测试工程。
 
-## Author and license
+## 作者与许可证
 
-Created by sunjinshuai — sunjinshuai@aikucun.com.
+作者：sunjinshuai — sunjinshuai@aikucun.com。
 
-Distributed under the [MIT license](LICENSE).
+本项目使用 [MIT 许可证](LICENSE)。
