@@ -15,7 +15,7 @@ bundle exec pod install --deployment --project-directory=Example 2>&1 | tee "$OU
 mkdir -p "$OUTPUT/example" "$OUTPUT/utilities"
 xcodebuild test -workspace Example/MYKit.xcworkspace -scheme MYKit-Example -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" -derivedDataPath "$OUTPUT/DerivedData" -resultBundlePath "$OUTPUT/example/result.xcresult" -only-testing:MYKit_Tests 2>&1 | tee "$OUTPUT/example/command.log"
 python3 ci/check-tests.py "$OUTPUT/example/result.xcresult" Example/Tests/acceptance.json
-python3 Tests/run-tests.py --udid "$SIMULATOR_UDID" --output "$OUTPUT/safekit"
+python3 Tests/run-tests.py --udid "$SIMULATOR_UDID" --output "$OUTPUT/safekit" --timeout 900
 xcodebuild test -project Tests/UtilitiesTests.xcodeproj -scheme Utilities -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" -derivedDataPath "$OUTPUT/DerivedData-Utilities" -resultBundlePath "$OUTPUT/utilities/result.xcresult" -only-testing:UtilitiesTests 2>&1 | tee "$OUTPUT/utilities/command.log"
 python3 ci/check-tests.py "$OUTPUT/utilities/result.xcresult" Tests/acceptance/Utilities.json
 bundle exec pod lib lint --allow-warnings 2>&1 | tee "$OUTPUT/lint.log"
