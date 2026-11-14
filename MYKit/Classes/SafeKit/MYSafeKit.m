@@ -85,8 +85,14 @@
     });
 }
 
-+ (void)registerRecordHandler:(nonnull id<MYSafeKitRecordProtocol>)record {
++ (void)registerRecordHandler:(nullable id<MYSafeKitRecordProtocol>)record {
     [MYSafeKitRecord registerRecordHandler:record];
+}
+
++ (BOOL)registerFallbackForClass:(Class)cls selector:(SEL)selector typeEncoding:(const char *)encoding {
+    BOOL success = [NSObject my_registerFallbackForClass:cls selector:selector typeEncoding:encoding];
+    if (!success) [MYSafeKitRecord recordFatalWithReason:@"Unsupported or conflicting explicit fallback signature" errorType:MYSafeKitShieldTypeUnrecognizedSelector];
+    return success;
 }
 
 @end

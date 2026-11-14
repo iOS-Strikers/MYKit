@@ -1,83 +1,69 @@
-//
-//  NSObject+Aspect.m
-//  Footstone
-//
-//  Created by 李阳 on 11/3/2018.
-//  Copyright © 2018 BetrayalPromise. All rights reserved.
-//
-
 #import "NSObject+Safe.h"
-#import <objc/message.h>
-#import "NSObject+Swizzle.h"
+#import "MYSafeContainerInternal.h"
 
-@implementation NSObject (Aspect)
-
+@implementation NSObject (Safe)
 + (void)registerClassPairMethodsInObject {
-    Class objectClass = NSClassFromString(@"NSObject");
-    
-    [self instanceSwizzleMethodWithClass:objectClass orginalMethod:@selector(setValue:forKey:) replaceMethod:@selector(safe_setValue:forKey:)];
-    
-    [self instanceSwizzleMethodWithClass:objectClass orginalMethod:@selector(setValue:forKeyPath:) replaceMethod:@selector(safe_setValue:forKeyPath:)];
-    
-    [self instanceSwizzleMethodWithClass:objectClass orginalMethod:@selector(valueForKey:) replaceMethod:@selector(safe_valueForKey:)];
-    
-    [self instanceSwizzleMethodWithClass:objectClass orginalMethod:@selector(valueForKeyPath:) replaceMethod:@selector(safe_valueForKeyPath:)];
-}
-
-- (void)safe_setValue:(nullable id)value forKey:(NSString *)key {
-    if (!value) {
-        NSLog(@"\"%@\"-value:(%@) can not be nil", NSStringFromSelector(_cmd), value);
-        return;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+    for (id sample in @[[NSObject new]]) {
+    Class cls = object_getClass(sample);
+    { SEL sel = NSSelectorFromString(@"setValue:forKey:");
+      MYGuard(cls, sel, "v@:@@", ^id(IMP original) {
+          return ^void(id obj, id value, NSString * key) {
+              if (!(key != nil)) { MYContainerReport(sel); return; }
+              ((void (*)(id, SEL, id, NSString *))original)(obj, sel, value, key);
+          };
+      });
     }
-    if (!key) {
-        NSLog(@"\"%@\"-key:(%@) can not be nil", NSStringFromSelector(_cmd), key);
-        return;
+    { SEL sel = NSSelectorFromString(@"setValue:forKeyPath:");
+      MYGuard(cls, sel, "v@:@@", ^id(IMP original) {
+          return ^void(id obj, id value, NSString * key) {
+              if (!(key != nil)) { MYContainerReport(sel); return; }
+              ((void (*)(id, SEL, id, NSString *))original)(obj, sel, value, key);
+          };
+      });
     }
-    [self safe_setValue:value forKey:key];
-}
-
-- (void)safe_setValue:(nullable id)value forKeyPath:(NSString *)keyPath {
-    if (!value) {
-        NSLog(@"\"%@\"-value:(%@) can not be nil", NSStringFromSelector(_cmd), value);
-        return;
+    { SEL sel = NSSelectorFromString(@"valueForKey:");
+      MYGuard(cls, sel, "@@:@", ^id(IMP original) {
+          return ^id(id obj, NSString * key) {
+              if (!(key != nil)) { MYContainerReport(sel); return nil; }
+              return ((id (*)(id, SEL, NSString *))original)(obj, sel, key);
+          };
+      });
     }
-    if (!keyPath) {
-        NSLog(@"\"%@\"-keyPath:(%@) can not be nil", NSStringFromSelector(_cmd), keyPath);
-        return;
+    { SEL sel = NSSelectorFromString(@"valueForKeyPath:");
+      MYGuard(cls, sel, "@@:@", ^id(IMP original) {
+          return ^id(id obj, NSString * key) {
+              if (!(key != nil)) { MYContainerReport(sel); return nil; }
+              return ((id (*)(id, SEL, NSString *))original)(obj, sel, key);
+          };
+      });
     }
-    [self safe_setValue:value forKeyPath:keyPath];
-}
-
-- (id)safe_valueForKey:(NSString *)key {
-    if (!key) {
-        NSLog(@"\"%@\"-key:(%@) can not be nil", NSStringFromSelector(_cmd), key);
-        return nil;
+    { SEL sel = NSSelectorFromString(@"valueForUndefinedKey:");
+      MYGuard(cls, sel, "@@:@", ^id(IMP original) {
+          return ^id(id obj, NSString * key) {
+              if (!(NO)) { MYContainerReport(sel); return nil; }
+              return ((id (*)(id, SEL, NSString *))original)(obj, sel, key);
+          };
+      });
     }
-    return [self safe_valueForKey:key];
-}
-
-- (nullable id)safe_valueForKeyPath:(NSString *)keyPath {
-    if (!keyPath) {
-        NSLog(@"\"%@\"-keyPath:(%@) can not be nil", NSStringFromSelector(_cmd), keyPath);
-        return nil;
+    { SEL sel = NSSelectorFromString(@"setValue:forUndefinedKey:");
+      MYGuard(cls, sel, "v@:@@", ^id(IMP original) {
+          return ^void(id obj, id value, NSString * key) {
+              if (!(NO)) { MYContainerReport(sel); return; }
+              ((void (*)(id, SEL, id, NSString *))original)(obj, sel, value, key);
+          };
+      });
     }
-    return [self safe_valueForKeyPath:keyPath];
+    { SEL sel = NSSelectorFromString(@"setNilValueForKey:");
+      MYGuard(cls, sel, "v@:@", ^id(IMP original) {
+          return ^void(id obj, NSString * key) {
+              if (!(NO)) { MYContainerReport(sel); return; }
+              ((void (*)(id, SEL, NSString *))original)(obj, sel, key);
+          };
+      });
+    }
+    }
+    });
 }
-
-- (nullable id)valueForUndefinedKey:(NSString *)key {
-    NSLog(@"\"%@\"-parameter0:(%@) not found", NSStringFromSelector(_cmd), key);
-    return nil;
-}
-
-- (void)setValue:(nullable id)value forUndefinedKey:(NSString *)key {
-    NSLog(@"\"%@\"-parameter0:(%@)  set %@ forKey %@ not found", NSStringFromSelector(_cmd), key, value, key);
-}
-
-- (void)setNilValueForKey:(NSString *)key {
-    NSLog(@"\"%@\"-parameter0:(%@) set nil for key %@", NSStringFromSelector(_cmd), key, key);
-}
-
 @end
-
-
-

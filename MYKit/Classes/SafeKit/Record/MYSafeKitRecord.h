@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "MYSafeKit.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface MYSafeKitRecord : NSObject
 
 /**
@@ -36,6 +38,8 @@
 /**
  alter 错误堆栈信息
  */
-+ (void)safeKit_showAlterWithMessage:(NSString *)messsage;
++ (void)safeKit_showAlterWithMessage:(NSString *)messsage __attribute__((deprecated("Use a presentation layer independent of error reporting")));
 
 @end
+
+NS_ASSUME_NONNULL_END

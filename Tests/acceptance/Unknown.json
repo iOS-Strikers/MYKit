@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "criteria": [
+    {
+      "id": "Unknown-testNativeSemanticsAndIsolation",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testNativeSemanticsAndIsolation"
+      ]
+    },
+    {
+      "id": "Unknown-testSwizzleInheritanceMissingMethodsAndIdempotence",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testSwizzleInheritanceMissingMethodsAndIdempotence"
+      ]
+    },
+    {
+      "id": "Unknown-testKVORegistrationBeforeActivationCanBeRemoved",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVORegistrationBeforeActivationCanBeRemoved"
+      ]
+    },
+    {
+      "id": "Unknown-testStartupHasNoUnavailableGuards",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testStartupHasNoUnavailableGuards"
+      ]
+    },
+    {
+      "id": "Unknown-testUnknownTypedFallbackAndRejection",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testUnknownTypedFallbackAndRejection"
+      ]
+    },
+    {
+      "id": "Unknown-testUnknownPreservesResolutionAndForwardingExceptions",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testUnknownPreservesResolutionAndForwardingExceptions"
+      ]
+    }
+  ]
+}

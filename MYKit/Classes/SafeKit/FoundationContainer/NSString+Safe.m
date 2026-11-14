@@ -1,89 +1,53 @@
-//
-//  NSString+Safe.m
-//  MYKitDemo
-//
-//  Created by QMMac on 2018/7/30.
-//  Copyright © 2018 com.51fanxing. All rights reserved.
-//
-
 #import "NSString+Safe.h"
-#import "NSObject+Swizzle.h"
-#import "MYSafeKitRecord.h"
+#import "MYSafeContainerInternal.h"
 
 @implementation NSString (Safe)
-
 + (void)registerClassPairMethodsInString {
-    Class NSCFConstantString = NSClassFromString(@"__NSCFConstantString");
-    
-    [self instanceSwizzleMethodWithClass:NSCFConstantString orginalMethod:@selector(characterAtIndex:) replaceMethod:@selector(safe_characterAtIndex:)];
-    
-    [self instanceSwizzleMethodWithClass:NSCFConstantString orginalMethod:@selector(substringFromIndex:) replaceMethod:@selector(safe_substringFromIndex:)];
-    
-    [self instanceSwizzleMethodWithClass:NSCFConstantString orginalMethod:@selector(substringToIndex:) replaceMethod:@selector(safe_substringToIndex:)];
-    
-    [self instanceSwizzleMethodWithClass:NSCFConstantString orginalMethod:@selector(substringWithRange:) replaceMethod:@selector(safe_substringWithRange:)];
-    
-    [self instanceSwizzleMethodWithClass:NSCFConstantString orginalMethod:@selector(stringByReplacingCharactersInRange:withString:) replaceMethod:@selector(safe_stringByReplacingCharactersInRange:withString:)];
-}
-
-- (unichar)safe_characterAtIndex:(NSUInteger)index {
-    if (index >= self.length) {
-        unichar characteristic = 0;
-        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : Range [0, %lu) or index out of bounds [0, %lu)",
-                            [self class], NSStringFromSelector(_cmd), index, self.length];
-        [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeContainer)];
-        
-        return characteristic;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+    for (id sample in MYStringSamples()) {
+    Class cls = object_getClass(sample);
+    { SEL sel = NSSelectorFromString(@"characterAtIndex:");
+      MYGuard(cls, sel, "S@:" MY_UINT "", ^id(IMP original) {
+          return ^unichar(id obj, NSUInteger index) {
+              if (!(index < [obj length])) { MYContainerReport(sel); return 0; }
+              return ((unichar (*)(id, SEL, NSUInteger))original)(obj, sel, index);
+          };
+      });
     }
-    return [self safe_characterAtIndex:index];
-}
-
-- (NSString *)safe_substringFromIndex:(NSUInteger)from {
-    if (from >= self.length) {
-        
-        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : Index %ld out of bounds; string length %ld",
-                            [self class], NSStringFromSelector(_cmd), (unsigned long)from, (unsigned long)self.length];
-        [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeContainer)];
-        return nil;
+    { SEL sel = NSSelectorFromString(@"substringFromIndex:");
+      MYGuard(cls, sel, "@@:" MY_UINT "", ^id(IMP original) {
+          return ^id(id obj, NSUInteger index) {
+              if (!(index <= [obj length])) { MYContainerReport(sel); return nil; }
+              return ((id (*)(id, SEL, NSUInteger))original)(obj, sel, index);
+          };
+      });
     }
-    return [self safe_substringFromIndex:from];
-}
-
-- (NSString *)safe_substringToIndex:(NSUInteger)to {
-    if (to >= self.length) {
-        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : Index %ld out of bounds; string length %ld",
-                            [self class], NSStringFromSelector(_cmd), (unsigned long)to, (unsigned long)self.length];
-        [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeContainer)];
-        return [self safe_substringToIndex:self.length - 1];
+    { SEL sel = NSSelectorFromString(@"substringToIndex:");
+      MYGuard(cls, sel, "@@:" MY_UINT "", ^id(IMP original) {
+          return ^id(id obj, NSUInteger index) {
+              if (!(index <= [obj length])) { MYContainerReport(sel); return nil; }
+              return ((id (*)(id, SEL, NSUInteger))original)(obj, sel, index);
+          };
+      });
     }
-    return [self safe_substringToIndex:to];
-}
-
-- (NSString *)safe_substringWithRange:(NSRange)range {
-    if (range.location + range.length > self.length) {
-        
-        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : Range {%ld, %ld} out of bounds; string length %ld",
-                            [self class], NSStringFromSelector(_cmd), (unsigned long)range.location, (unsigned long)range.length, (unsigned long)self.length];
-        [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeContainer)];
-        if (range.location < self.length) {
-            return [self safe_substringFromIndex:range.location];
-        }
-        return nil;
+    { SEL sel = NSSelectorFromString(@"substringWithRange:");
+      MYGuard(cls, sel, "@@:" MY_RANGE "", ^id(IMP original) {
+          return ^id(id obj, NSRange range) {
+              if (!(MYValidRange(range, [obj length]))) { MYContainerReport(sel); return nil; }
+              return ((id (*)(id, SEL, NSRange))original)(obj, sel, range);
+          };
+      });
     }
-    return [self safe_substringWithRange:range];
-}
-
-- (NSString *)safe_stringByReplacingCharactersInRange:(NSRange)range withString:(NSString *)replacement {
-    if (range.location + range.length > self.length) {
-        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : Range [0, %lu) or index out of bounds [0, %lu)",
-                            [self class], NSStringFromSelector(_cmd), range.length, self.length];
-        [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeContainer)];
-        if (range.location<self.length) {
-            return [self safe_stringByReplacingCharactersInRange:NSMakeRange(range.location, self.length - range.location) withString:replacement];
-        }
-        return nil;
+    { SEL sel = NSSelectorFromString(@"stringByReplacingCharactersInRange:withString:");
+      MYGuard(cls, sel, "@@:" MY_RANGE "@", ^id(IMP original) {
+          return ^id(id obj, NSRange range, NSString * value) {
+              if (!(value && MYValidRange(range, [obj length]))) { MYContainerReport(sel); return nil; }
+              return ((id (*)(id, SEL, NSRange, NSString *))original)(obj, sel, range, value);
+          };
+      });
     }
-    return [self safe_stringByReplacingCharactersInRange:range withString:replacement];
+    }
+    });
 }
-
 @end

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "criteria": [
+    {
+      "id": "Native-testNativeSemanticsAndIsolation",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testNativeSemanticsAndIsolation"
+      ]
+    },
+    {
+      "id": "Native-testSwizzleInheritanceMissingMethodsAndIdempotence",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testSwizzleInheritanceMissingMethodsAndIdempotence"
+      ]
+    },
+    {
+      "id": "Native-testKVORegistrationBeforeActivationCanBeRemoved",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVORegistrationBeforeActivationCanBeRemoved"
+      ]
+    },
+    {
+      "id": "Native-testStartupHasNoUnavailableGuards",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testStartupHasNoUnavailableGuards"
+      ]
+    },
+    {
+      "id": "Native-testKVOIdentityOptionsAndRemoval",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOIdentityOptionsAndRemoval"
+      ]
+    },
+    {
+      "id": "Native-testKVODuplicateAndContextlessNativeParity",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVODuplicateAndContextlessNativeParity"
+      ]
+    },
+    {
+      "id": "Native-testKVOInitialReentryAndPrior",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOInitialReentryAndPrior"
+      ]
+    },
+    {
+      "id": "Native-testKVOInitialExceptionLeavesNoRegistration",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOInitialExceptionLeavesNoRegistration"
+      ]
+    },
+    {
+      "id": "Native-testKVOInitialSelfRemovalBeforeInstallation",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOInitialSelfRemovalBeforeInstallation"
+      ]
+    }
+  ]
+}

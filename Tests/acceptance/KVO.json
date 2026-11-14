@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "criteria": [
+    {
+      "id": "KVO-testNativeSemanticsAndIsolation",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testNativeSemanticsAndIsolation"
+      ]
+    },
+    {
+      "id": "KVO-testSwizzleInheritanceMissingMethodsAndIdempotence",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testSwizzleInheritanceMissingMethodsAndIdempotence"
+      ]
+    },
+    {
+      "id": "KVO-testKVORegistrationBeforeActivationCanBeRemoved",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVORegistrationBeforeActivationCanBeRemoved"
+      ]
+    },
+    {
+      "id": "KVO-testStartupHasNoUnavailableGuards",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testStartupHasNoUnavailableGuards"
+      ]
+    },
+    {
+      "id": "KVO-testKVOIdentityOptionsAndRemoval",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOIdentityOptionsAndRemoval"
+      ]
+    },
+    {
+      "id": "KVO-testKVODuplicateAndContextlessNativeParity",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVODuplicateAndContextlessNativeParity"
+      ]
+    },
+    {
+      "id": "KVO-testKVOInitialReentryAndPrior",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOInitialReentryAndPrior"
+      ]
+    },
+    {
+      "id": "KVO-testKVOInitialExceptionLeavesNoRegistration",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOInitialExceptionLeavesNoRegistration"
+      ]
+    },
+    {
+      "id": "KVO-testKVOLifetimesAndUnobservedDestruction",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOLifetimesAndUnobservedDestruction"
+      ]
+    },
+    {
+      "id": "KVO-testKVONativeRegistrationReentryIsTracked",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVONativeRegistrationReentryIsTracked"
+      ]
+    },
+    {
+      "id": "KVO-testKVOInitialSelfRemovalBeforeInstallation",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOInitialSelfRemovalBeforeInstallation"
+      ]
+    },
+    {
+      "id": "KVO-testKVOFrameworkModelAndRegistrationRollback",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOFrameworkModelAndRegistrationRollback"
+      ]
+    },
+    {
+      "id": "KVO-testKVOObservedDiesBeforeLivingObserver",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOObservedDiesBeforeLivingObserver"
+      ]
+    },
+    {
+      "id": "KVO-testKVOConcurrentRegistrations",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOConcurrentRegistrations"
+      ]
+    },
+    {
+      "id": "KVO-testKVOInvalidArguments",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOInvalidArguments"
+      ]
+    }
+  ]
+}

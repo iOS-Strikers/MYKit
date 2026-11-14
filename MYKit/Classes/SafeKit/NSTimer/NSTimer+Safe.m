@@ -1,94 +1,45 @@
-//
-//  NSTimer+Safe.m
-//  MYKitDemo
-//
-//  Created by QMMac on 2018/7/30.
-//  Copyright © 2018 com.51fanxing. All rights reserved.
-//
-
 #import "NSTimer+Safe.h"
-#import "MYSafeKitRecord.h"
 #import "NSObject+Swizzle.h"
+#import "MYSafeKitRecord.h"
+#import <objc/message.h>
 
-@interface XXTimerProxy : NSObject
-
-@property (nonatomic, weak) NSTimer *sourceTimer;
+@interface MYTimerProxy : NSObject
 @property (nonatomic, weak) id target;
-@property (nonatomic) SEL aSelector;
-
+@property (nonatomic) SEL selector;
+- (void)trigger:(NSTimer *)timer;
 @end
-
-@implementation XXTimerProxy
-
-- (void)trigger:(id)userinfo {
-    id strongTarget = self.target;
-    if (strongTarget && ([strongTarget respondsToSelector:self.aSelector])) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [strongTarget performSelector:self.aSelector withObject:userinfo];
-#pragma clang diagnostic pop
+@implementation MYTimerProxy
+- (void)trigger:(NSTimer *)timer {
+    id target = self.target;
+    if (target) {
+        // Normal Objective-C dispatch preserves resolution and both forwarding stages.
+        ((void (*)(id, SEL, NSTimer *))objc_msgSend)(target, self.selector, timer);
     } else {
-        NSTimer *sourceTimer = self.sourceTimer;
-        if (sourceTimer) {
-            [sourceTimer invalidate];
-        }
-        NSString *reason = [NSString stringWithFormat:@"*****Warning***** logic error target is %@ method is %@, reason : an object dealloc not invalidate Timer.", [self class], NSStringFromSelector(self.aSelector)];
-        
-        [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeTimer)];
+        [timer invalidate];
+        [MYSafeKitRecord recordFatalWithReason:@"Repeating timer target was released" errorType:MYSafeKitShieldTypeTimer];
     }
 }
-
 @end
-
 @implementation NSTimer (Safe)
-
 + (void)registerClassPairMethodsInTimer {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self swizzleClassMethod:@selector(scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:) replaceMethod:@selector(safe_scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:)];
-        
-        [self swizzleClassMethod:@selector(timerWithTimeInterval:target:selector:userInfo:repeats:) replaceMethod:@selector(safe_timerWithTimeInterval:target:selector:userInfo:repeats:)];
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        for (NSString *name in @[@"scheduledTimerWithTimeInterval:target:selector:userInfo:repeats:", @"timerWithTimeInterval:target:selector:userInfo:repeats:"]) {
+            SEL selector = NSSelectorFromString(name);
+            Class cls = object_getClass(self);
+            MYInstallSafeMethod(cls, selector, method_getTypeEncoding(class_getInstanceMethod(cls, selector)), ^id(IMP original) {
+                return ^NSTimer *(id object, NSTimeInterval interval, id target, SEL callback, id userInfo, BOOL repeats) {
+                    id effectiveTarget = target;
+                    SEL effectiveSelector = callback;
+                    // The scheduled factory may call the other factory internally.
+                    if (repeats && target && callback && ![target isKindOfClass:[MYTimerProxy class]]) {
+                        MYTimerProxy *proxy = [MYTimerProxy new]; proxy.target = target; proxy.selector = callback;
+                        effectiveTarget = proxy; effectiveSelector = @selector(trigger:);
+                    }
+                    return ((id (*)(id, SEL, NSTimeInterval, id, SEL, id, BOOL))original)(object, selector, interval, effectiveTarget, effectiveSelector, userInfo, repeats);
+                };
+            });
+        }
     });
 }
-
-+ (NSTimer *)safe_scheduledTimerWithTimeInterval:(NSTimeInterval)ti target:(id)aTarget selector:(SEL)aSelector userInfo:(nullable id)userInfo repeats:(BOOL)yesOrNo {
-    if (yesOrNo) {
-        NSTimer *timer = nil;
-        @autoreleasepool {
-            XXTimerProxy *proxy = [XXTimerProxy new];
-            proxy.target = aTarget;
-            proxy.aSelector = aSelector;
-            timer.timerProxy = proxy;
-            timer = [self safe_scheduledTimerWithTimeInterval:ti target:proxy selector:@selector(trigger:) userInfo:userInfo repeats:yesOrNo];
-            proxy.sourceTimer = timer;
-        }
-        return timer;
-    }
-    return [self safe_scheduledTimerWithTimeInterval:ti target:aTarget selector:aSelector userInfo:userInfo repeats:yesOrNo];
-}
-
-+ (NSTimer *)safe_timerWithTimeInterval:(NSTimeInterval)ti target:(id)aTarget selector:(SEL)aSelector userInfo:(id)userInfo repeats:(BOOL)yesOrNo {
-    if (yesOrNo) {
-        NSTimer *timer = nil;
-        @autoreleasepool {
-            XXTimerProxy *proxy = [XXTimerProxy new];
-            proxy.target = aTarget;
-            proxy.aSelector = aSelector;
-            timer.timerProxy = proxy;
-            timer = [self safe_timerWithTimeInterval:ti target:proxy selector:@selector(trigger:) userInfo:userInfo repeats:yesOrNo];
-            proxy.sourceTimer = timer;
-        }
-        return timer;
-    }
-    return [self safe_timerWithTimeInterval:ti target:aTarget selector:aSelector userInfo:userInfo repeats:yesOrNo];
-}
-
-- (void)setTimerProxy:(XXTimerProxy *)timerProxy {
-    objc_setAssociatedObject(self, @selector(timerProxy), timerProxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (XXTimerProxy *)timerProxy {
-    return objc_getAssociatedObject(self, @selector(timerProxy));
-}
-
 @end

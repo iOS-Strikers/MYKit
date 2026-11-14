@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "criteria": [
+    {
+      "id": "Container-testNativeSemanticsAndIsolation",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testNativeSemanticsAndIsolation"
+      ]
+    },
+    {
+      "id": "Container-testSwizzleInheritanceMissingMethodsAndIdempotence",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testSwizzleInheritanceMissingMethodsAndIdempotence"
+      ]
+    },
+    {
+      "id": "Container-testKVORegistrationBeforeActivationCanBeRemoved",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVORegistrationBeforeActivationCanBeRemoved"
+      ]
+    },
+    {
+      "id": "Container-testStartupHasNoUnavailableGuards",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testStartupHasNoUnavailableGuards"
+      ]
+    },
+    {
+      "id": "Container-testRepeatAndConcurrentRegistration",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testRepeatAndConcurrentRegistration"
+      ]
+    },
+    {
+      "id": "Container-testArrayReadsAndRangeOverflow",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testArrayReadsAndRangeOverflow"
+      ]
+    },
+    {
+      "id": "Container-testArrayMutationsAtomicAndValid",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testArrayMutationsAtomicAndValid"
+      ]
+    },
+    {
+      "id": "Container-testConstructorsAndLargeInput",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testConstructorsAndLargeInput"
+      ]
+    },
+    {
+      "id": "Container-testDictionaryMutationAndBridging",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testDictionaryMutationAndBridging"
+      ]
+    },
+    {
+      "id": "Container-testStringsAllBoundariesAndBridging",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testStringsAllBoundariesAndBridging"
+      ]
+    },
+    {
+      "id": "Container-testKVCDefaultsAndOverrides",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVCDefaultsAndOverrides"
+      ]
+    }
+  ]
+}

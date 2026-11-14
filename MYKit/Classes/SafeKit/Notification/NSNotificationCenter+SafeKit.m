@@ -1,84 +1,44 @@
-//
-//  NSNotificationCenter+SafeKit.m
-//  MYKitDemo
-//
-//  Created by QMMac on 2018/6/19.
-//  Copyright © 2018 com.51fanxing. All rights reserved.
-//
-
 #import "NSNotificationCenter+SafeKit.h"
 #import "NSObject+Swizzle.h"
 
-@interface XXObserverRemover : NSObject
-
+@interface MYNotificationLifetime : NSObject
+- (instancetype)initWithObserver:(id)observer;
+- (void)addCenter:(NSNotificationCenter *)center;
 @end
-
-@implementation XXObserverRemover {
-    __strong NSMutableArray *_centers;
-    __unsafe_unretained id _obs;
+@implementation MYNotificationLifetime {
+    NSHashTable<NSNotificationCenter *> *_centers;
+    __unsafe_unretained id _observer;
 }
-
-- (instancetype)initWithObserver:(id)obs {
-    if (self = [super init]) {
-        _obs = obs;
-        _centers = @[].mutableCopy;
-    }
+- (instancetype)initWithObserver:(id)observer {
+    if ((self = [super init])) { _observer = observer; _centers = [NSHashTable weakObjectsHashTable]; }
     return self;
 }
-
-- (void)addCenter:(NSNotificationCenter *)center {
-    if (center) {
-        [_centers addObject:center];
-    }
-}
-
+- (void)addCenter:(NSNotificationCenter *)center { @synchronized (_centers) { [_centers addObject:center]; } }
 - (void)dealloc {
-    @autoreleasepool {
-        for (NSNotificationCenter *center in _centers) {
-            [center removeObserver:_obs];
-        }
-    }
+    // Associated objects are released while the observer's storage still exists.
+    @autoreleasepool { for (NSNotificationCenter *center in _centers.allObjects) [center removeObserver:_observer]; }
 }
-
 @end
-
 @implementation NSNotificationCenter (SafeKit)
-
 + (void)safeGuardNotificationSelector {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [self instanceSwizzleMethod:@selector(addObserver:selector:name:object:) replaceMethod:@selector(safe_addObserver:selector:name:object:)];
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        SEL selector = @selector(addObserver:selector:name:object:);
+        MYInstallSafeMethod(self, selector, "v@:@:@@", ^id(IMP original) {
+            return ^(NSNotificationCenter *center, id observer, SEL callback, NSString *name, id object) {
+                ((void (*)(id, SEL, id, SEL, id, id))original)(center, selector, observer, callback, name, object);
+                if (!observer) return;
+                static char lifetimeKey;
+                @synchronized (observer) {
+                    MYNotificationLifetime *lifetime = objc_getAssociatedObject(observer, &lifetimeKey);
+                    if (!lifetime) {
+                        lifetime = [[MYNotificationLifetime alloc] initWithObserver:observer];
+                        objc_setAssociatedObject(observer, &lifetimeKey, lifetime, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+                    }
+                    [lifetime addCenter:center];
+                }
+            };
+        });
     });
 }
-
-- (void)safe_addObserver:(id)observer selector:(SEL)aSelector name:(nullable NSNotificationName)aName object:(nullable id)anObject {
-
-    [self safe_addObserver:observer selector:aSelector name:aName object:anObject];
-    
-    addCenterForObserver(self, observer);
-}
-
-// why autorelasePool
-// an instance life dead
-// *********************1 release property
-// *********************2 remove AssociatedObject
-// *********************3 destory self
-// Once u want use assobciedObject's dealloc method do something ,
-// must in a custome autorelease Pool let associate
-// release immediately.
-// AssociatedObject retain source target  strategy must be __unsafe_unretain. (weak will be nil )
-void addCenterForObserver(NSNotificationCenter *center ,id obs) {
-    XXObserverRemover *remover = nil;
-    static char removerKey;
-    
-    @autoreleasepool {
-        remover = objc_getAssociatedObject(obs, &removerKey);
-        if (!remover) {
-            remover = [[XXObserverRemover alloc] initWithObserver:obs];
-            objc_setAssociatedObject(obs, &removerKey, remover, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        }
-        [remover addCenter:center];
-    }
-}
-
 @end

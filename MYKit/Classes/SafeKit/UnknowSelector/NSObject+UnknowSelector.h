@@ -16,3 +16,6 @@
 + (void)safeGuardUnrecognizedSelector;
 
 @end
+@interface NSObject (MYExplicitFallback)
++ (BOOL)my_registerFallbackForClass:(Class)cls selector:(SEL)selector typeEncoding:(const char *)encoding;
+@end

@@ -1,54 +1,38 @@
-//
-//  MYSafeKitRecord.m
-//  MYKitDemo
-//
-//  Created by QMMac on 2018/7/31.
-//  Copyright © 2018 com.51fanxing. All rights reserved.
-//
-
 #import "MYSafeKitRecord.h"
+#include <stdio.h>
 
 @implementation MYSafeKitRecord
-
-static id<MYSafeKitRecordProtocol> __record;
-
+static id<MYSafeKitRecordProtocol> recordHandler;
+static _Thread_local BOOL recording;
 + (void)registerRecordHandler:(id<MYSafeKitRecordProtocol>)record {
-    __record = record;
+    @synchronized (self) { recordHandler = record; }
 }
-
-+ (void)recordFatalWithReason:(nullable NSString *)reason
-                    errorType:(MYSafeKitShieldType)type {
-    
-    NSDictionary<NSString *, id> *errorInfo = @{ NSLocalizedDescriptionKey : (reason.length ? reason : @"未标识原因" )};
-    
-    NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"com.xxshield.%@",
-                                               [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"]]
-                                         code:-type
-                                     userInfo:errorInfo];
-    [__record recordWithReason:error];
++ (void)recordFatalWithReason:(NSString *)reason errorType:(MYSafeKitShieldType)type {
+    if (recording) return;
+    recording = YES;
+    @try {
+        id<MYSafeKitRecordProtocol> handler;
+        @synchronized (self) { handler = recordHandler; }
+        if (!handler) return;
+        NSArray *stack = [NSThread callStackSymbols];
+        if (stack.count > 32) stack = [stack subarrayWithRange:NSMakeRange(0, 32)];
+        NSError *error = [NSError errorWithDomain:[NSString stringWithFormat:@"com.xxshield.%@", NSBundle.mainBundle.bundleIdentifier] code:-(NSInteger)type userInfo:@{NSLocalizedDescriptionKey:reason.length ? reason : @"Unknown protection failure", @"callStack":stack ?: @[]}];
+        [handler recordWithReason:error];
+    } @catch (__unused NSException *exception) {
+        fputs("MYKit: record handler raised an exception\n", stderr);
+    } @finally { recording = NO; }
 }
-
-+ (NSString *)getErrorMessageWithTipString:(NSString *)tipString {
-    NSString *contentString = tipString;
-    // 堆栈数据
-    NSArray *callStackSymbolsArr = [NSThread callStackSymbols];
-    if (callStackSymbolsArr != nil) {
-        NSMutableArray *mutableArray = [NSMutableArray arrayWithArray:callStackSymbolsArr];
-        NSString *ErrorString = [mutableArray componentsJoinedByString:@"\n"];//分隔符逗号
-        contentString = [NSString stringWithFormat:@"%@\n%@", tipString, ErrorString];
-    }
-    
-    return contentString;
++ (NSString *)getErrorMessageWithTipString:(NSString *)tip {
+    NSArray *stack = [NSThread callStackSymbols];
+    if (stack.count > 32) stack = [stack subarrayWithRange:NSMakeRange(0, 32)];
+    return [NSString stringWithFormat:@"%@\n%@", tip ?: @"", [stack componentsJoinedByString:@"\n"]];
 }
-
-+ (void)safeKit_showAlterWithMessage:(NSString *)messsage {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
-                                                       message:messsage
-                                                      delegate:self
-                                             cancelButtonTitle:nil
-                                             otherButtonTitles:@"确定", nil];
-    [alertView show];
++ (void)safeKit_showAlterWithMessage:(NSString *)message {
+    dispatch_async(dispatch_get_main_queue(), ^{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [[[UIAlertView alloc] initWithTitle:@"MYKit" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+#pragma clang diagnostic pop
+    });
 }
-
-
 @end

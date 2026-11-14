@@ -1,128 +1,108 @@
-//
-//  NSObject+UnknowSelector.m
-//  MYKitDemo
-//
-//  Created by QMMac on 2018/6/19.
-//  Copyright © 2018 com.51fanxing. All rights reserved.
-//
-
 #import "NSObject+UnknowSelector.h"
 #import "NSObject+Swizzle.h"
 #import "MYSafeKitRecord.h"
-#import <dlfcn.h>
+#include <ctype.h>
 
-/**
- default Implement
- 
- @param target trarget
- @param cmd cmd
- @param ... other param
- @return default Implement is zero
- */
-int smartFunction(id target, SEL cmd, ...) {
-    return 0;
+static NSMutableDictionary<NSString *, NSMethodSignature *> *fallbacks;
+static IMP instanceForward, classForward;
+static NSString *MYFallbackKey(Class cls, SEL selector) { return [NSString stringWithFormat:@"%p:%s", cls, sel_getName(selector)]; }
+// Validate syntax before asking Foundation to parse it. Encoding cannot prove the caller's ABI.
+static BOOL MYParseType(const char **cursor, NSUInteger depth) {
+    if (depth > 16) return NO;
+    const char *p = *cursor;
+    while (*p && strchr("rnNoORV", *p)) p++;
+    if (!*p) return NO;
+    if (strchr("cislqCISLQfdBv#:*", *p)) p++;
+    else if (*p == '@') {
+        p++;
+        if (*p == '?') p++;
+        else if (*p == '"') { p++; while (*p && *p != '"') p++; if (*p++ != '"') return NO; }
+    } else if (*p == '^') {
+        p++; if (!MYParseType(&p, depth + 1)) return NO;
+    } else if (*p == '{') {
+        p++; while (*p && *p != '=' && *p != '}') p++;
+        if (*p++ != '=') return NO;
+        NSUInteger fields = 0;
+        while (*p && *p != '}') {
+            if (*p == '"') { p++; while (*p && *p != '"') p++; if (*p++ != '"') return NO; }
+            if (++fields > 128 || !MYParseType(&p, depth + 1)) return NO;
+        }
+        if (!fields || *p++ != '}') return NO;
+    } else return NO;
+    *cursor = p;
+    return YES;
 }
-
-static BOOL __addMethod(Class clazz, SEL sel) {
-    NSString *selName = NSStringFromSelector(sel);
-    
-    NSMutableString *tmpString = [[NSMutableString alloc] initWithFormat:@"%@", selName];
-    
-    int count = (int)[tmpString replaceOccurrencesOfString:@":"
-                                                withString:@"_"
-                                                   options:NSCaseInsensitiveSearch
-                                                     range:NSMakeRange(0, selName.length)];
-    
-    NSMutableString *val = [[NSMutableString alloc] initWithString:@"i@:"];
-    
-    for (int i = 0; i < count; i++) {
-        [val appendString:@"@"];
+static BOOL MYValidEncoding(const char *encoding, SEL selector) {
+    if (!encoding || !*encoding || strlen(encoding) > 2048) return NO;
+    const char *p = encoding;
+    NSUInteger types = 0;
+    while (*p) {
+        if (!MYParseType(&p, 0)) return NO;
+        types++;
+        while (isdigit((unsigned char)*p)) p++;
     }
-    const char *funcTypeEncoding = [val UTF8String];
-    return class_addMethod(clazz, sel, (IMP)smartFunction, funcTypeEncoding);
+    NSUInteger arguments = 2;
+    for (const char *s = sel_getName(selector); *s; s++) if (*s == ':') arguments++;
+    return types == arguments + 1;
 }
-
-@interface MYShieldStubObject : NSObject
-
-- (instancetype)init __unavailable;
-
-+ (MYShieldStubObject *)shareInstance;
-
-- (BOOL)addFunc:(SEL)sel;
-
-+ (BOOL)addClassFunc:(SEL)sel;
-
-@end
-
-@implementation MYShieldStubObject
-
-+ (MYShieldStubObject *)shareInstance {
-    static MYShieldStubObject *singleton;
-    if (!singleton) {
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            singleton = [MYShieldStubObject new];
-        });
-    }
-    return singleton;
+static BOOL MYDefaultForwarding(id object) {
+    Class cls = object_getClass(object);
+    IMP current = class_getMethodImplementation(cls, @selector(forwardInvocation:));
+    return current == (class_isMetaClass(cls) ? classForward : instanceForward);
 }
-
-- (BOOL)addFunc:(SEL)sel {
-    return __addMethod([MYShieldStubObject class], sel);
+static NSMethodSignature *MYSignature(id object, SEL selector) {
+    if (!MYDefaultForwarding(object)) return nil;
+    @synchronized ([NSObject class]) { return fallbacks[MYFallbackKey(object_getClass(object), selector)]; }
 }
-
-+ (BOOL)addClassFunc:(SEL)sel {
-    Class metaClass = objc_getMetaClass(class_getName([MYShieldStubObject class]));
-    return __addMethod(metaClass, sel);
-}
-
-@end
-
-@implementation NSObject (UnknowSelector)
-
-+ (void)safeGuardUnrecognizedSelector {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        // 防御对象实例方法
-        [self instanceSwizzleMethod:@selector(forwardingTargetForSelector:) replaceMethod:@selector(safe_instanceMethod_forwardingTargetForSelector:)];
-        
-        // 防御对象类方法
-        [self swizzleClassMethod:@selector(forwardingTargetForSelector:) replaceMethod:@selector(safe_classMethod_forwardingTargetForSelector:)];
+static void MYInstallForwarding(Class cls, BOOL meta) {
+    SEL sigSel = @selector(methodSignatureForSelector:);
+    SEL forwardSel = @selector(forwardInvocation:);
+    MYInstallSafeMethod(cls, forwardSel, "v@:@", ^id(IMP original) {
+        return ^(id object, NSInvocation *invocation) {
+            NSMethodSignature *signature = MYSignature(object, invocation.selector);
+            if (!signature) { ((void (*)(id, SEL, id))original)(object, forwardSel, invocation); return; }
+            NSUInteger size = signature.methodReturnLength;
+            if (size) {
+                void *zero = calloc(1, size);
+                if (!zero) { ((void (*)(id, SEL, id))original)(object, forwardSel, invocation); return; }
+                [invocation setReturnValue:zero]; free(zero);
+            }
+            [MYSafeKitRecord recordFatalWithReason:[NSString stringWithFormat:@"Explicit fallback for %s", sel_getName(invocation.selector)] errorType:MYSafeKitShieldTypeUnrecognizedSelector];
+        };
+    });
+    if (meta) classForward = class_getMethodImplementation(cls, forwardSel);
+    else instanceForward = class_getMethodImplementation(cls, forwardSel);
+    MYInstallSafeMethod(cls, sigSel, "@@::", ^id(IMP original) {
+        return ^NSMethodSignature *(id object, SEL selector) {
+            NSMethodSignature *signature = ((id (*)(id, SEL, SEL))original)(object, sigSel, selector);
+            return signature ?: MYSignature(object, selector);
+        };
     });
 }
-
-- (id)safe_instanceMethod_forwardingTargetForSelector:(SEL)aSelector {
-
-    BOOL aBool = [self respondsToSelector:aSelector];
-    
-    NSMethodSignature * signature = [self methodSignatureForSelector:aSelector];
-    if (aBool || signature) {
-        return [self safe_instanceMethod_forwardingTargetForSelector:aSelector];
-    } else {
-        MYShieldStubObject *stub = [MYShieldStubObject shareInstance];
-        [stub addFunc:aSelector];
-        
-        NSString *reason = [NSString stringWithFormat:@"*****Warning***** logic error.target is %@ method is %@, reason : method forword to Object default implement like send message to nil.",[self class], NSStringFromSelector(aSelector)];
-        [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeUnrecognizedSelector)];
-        return stub;
+@implementation NSObject (UnknowSelector)
++ (BOOL)my_registerFallbackForClass:(Class)cls selector:(SEL)selector typeEncoding:(const char *)encoding {
+    if (!cls || !selector || !MYValidEncoding(encoding, selector) || class_getInstanceMethod(cls, selector)) return NO;
+    NSMethodSignature *signature;
+    @try { signature = [NSMethodSignature signatureWithObjCTypes:encoding]; } @catch (__unused NSException *exception) { return NO; }
+    if (!signature || signature.methodReturnLength > 4096 || strcmp([signature getArgumentTypeAtIndex:0], "@") || strcmp([signature getArgumentTypeAtIndex:1], ":")) return NO;
+    for (NSUInteger i = 2; i < signature.numberOfArguments; i++) if (!strcmp([signature getArgumentTypeAtIndex:i], "v")) return NO;
+    @synchronized ([NSObject class]) {
+        if (!fallbacks) fallbacks = [NSMutableDictionary new];
+        NSString *key = MYFallbackKey(cls, selector);
+        NSMethodSignature *old = fallbacks[key];
+        if (old) {
+            if (old.numberOfArguments != signature.numberOfArguments || strcmp(old.methodReturnType, signature.methodReturnType)) return NO;
+            for (NSUInteger i = 0; i < old.numberOfArguments; i++) if (strcmp([old getArgumentTypeAtIndex:i], [signature getArgumentTypeAtIndex:i])) return NO;
+        }
+        fallbacks[key] = signature;
     }
+    return YES;
 }
-
-+ (id)safe_classMethod_forwardingTargetForSelector:(SEL)aSelector {
-    
-    BOOL aBool = [self respondsToSelector:aSelector];
-    
-    NSMethodSignature * signature = [self methodSignatureForSelector:aSelector];
-    if (aBool || signature) {
-        return [self safe_classMethod_forwardingTargetForSelector:aSelector];
-    } else {
-        MYShieldStubObject *stub = [MYShieldStubObject shareInstance];
-        [stub addFunc:aSelector];
-        
-        NSString *reason = [NSString stringWithFormat:@"*****Warning***** logic error.target is %@ method is %@, reason : method forword to Object default implement like send message to nil.",[self class], NSStringFromSelector(aSelector)];
-        [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeUnrecognizedSelector)];
-        return stub;
-    }
++ (void)safeGuardUnrecognizedSelector {
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        MYInstallForwarding([NSObject class], NO);
+        MYInstallForwarding(object_getClass([NSObject class]), YES);
+    });
 }
-
 @end

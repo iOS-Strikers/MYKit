@@ -1,106 +1,55 @@
-//
-//  NSObject+Swizzle.m
-//  MYKitDemo
-//
-//  Created by QMMac on 2018/6/13.
-//  Copyright © 2018 com.51fanxing. All rights reserved.
-//
-
 #import "NSObject+Swizzle.h"
 
+static BOOL MYTypesMatch(Method method, const char *encoding) {
+    if (!method || !encoding) return NO;
+    NSMethodSignature *a = [NSMethodSignature signatureWithObjCTypes:method_getTypeEncoding(method)];
+    NSMethodSignature *b = [NSMethodSignature signatureWithObjCTypes:encoding];
+    if (!a || !b || a.numberOfArguments != b.numberOfArguments || strcmp(a.methodReturnType, b.methodReturnType)) return NO;
+    for (NSUInteger i = 0; i < a.numberOfArguments; i++) {
+        if (strcmp([a getArgumentTypeAtIndex:i], [b getArgumentTypeAtIndex:i])) return NO;
+    }
+    return YES;
+}
+
+BOOL MYInstallSafeMethod(Class cls, SEL selector, const char *encoding, id (^factory)(IMP)) {
+    if (!cls || !selector || !factory) return NO;
+    @synchronized ([NSObject class]) {
+        static NSMutableSet *installed;
+        if (!installed) installed = [NSMutableSet new];
+        NSString *key = [NSString stringWithFormat:@"%p:%s", cls, sel_getName(selector)];
+        if ([installed containsObject:key]) return YES;
+        Method method = class_getInstanceMethod(cls, selector);
+        if (!MYTypesMatch(method, encoding)) return NO;
+        IMP original = method_getImplementation(method);
+        IMP replacement = imp_implementationWithBlock(factory(original));
+        if (!replacement) return NO;
+        class_replaceMethod(cls, selector, replacement, method_getTypeEncoding(method));
+        [installed addObject:key];
+        return YES;
+    }
+}
+
+static void MYExchange(Class cls, SEL original, SEL replacement) {
+    if (!cls || !original || !replacement || original == replacement) return;
+    @synchronized ([NSObject class]) {
+        static NSMutableSet *installed;
+        if (!installed) installed = [NSMutableSet new];
+        NSString *key = [NSString stringWithFormat:@"%p:%s:%s", cls, sel_getName(original), sel_getName(replacement)];
+        if ([installed containsObject:key]) return;
+        Method a = class_getInstanceMethod(cls, original);
+        Method b = class_getInstanceMethod(cls, replacement);
+        if (!a || !b || !MYTypesMatch(a, method_getTypeEncoding(b))) return;
+        IMP ai = method_getImplementation(a), bi = method_getImplementation(b);
+        const char *at = method_getTypeEncoding(a), *bt = method_getTypeEncoding(b);
+        class_replaceMethod(cls, original, bi, at);
+        class_replaceMethod(cls, replacement, ai, bt);
+        [installed addObject:key];
+    }
+}
+
 @implementation NSObject (Swizzle)
-
-+ (void)swizzleClassMethod:(SEL)originalSelector replaceMethod:(SEL)replaceSelector {
-    
-    Class class = [self class];
-    
-    // Method中包含IMP函数指针，通过替换IMP，使SEL调用不同函数实现
-    Method origMethod = class_getClassMethod(class, originalSelector);
-    Method replaceMeathod = class_getClassMethod(class, replaceSelector);
-    Class metaKlass = objc_getMetaClass(NSStringFromClass(class).UTF8String);
-    
-    // class_addMethod:如果发现方法已经存在，会失败返回，也可以用来做检查用,我们这里是为了避免源方法没有实现的情况;如果方法没有存在,我们则先尝试添加被替换的方法的实现
-    BOOL didAddMethod = class_addMethod(metaKlass,
-                                        originalSelector,
-                                        method_getImplementation(replaceMeathod),
-                                        method_getTypeEncoding(replaceMeathod));
-    if (didAddMethod) {
-        // 原方法未实现，则替换原方法防止crash
-        class_replaceMethod(metaKlass,
-                            replaceSelector,
-                            method_getImplementation(origMethod),
-                            method_getTypeEncoding(origMethod));
-    } else {
-        // 添加失败：说明源方法已经有实现，直接将两个方法的实现交换即
-        method_exchangeImplementations(origMethod, replaceMeathod);
-    }
-}
-
-- (void)instanceSwizzleMethod:(SEL _Nonnull )originalSelector replaceMethod:(SEL _Nonnull )replaceSelector {
-    Class class = [self class];
-    Method origMethod = class_getInstanceMethod(class, originalSelector);
-    Method replaceMeathod = class_getInstanceMethod(class, replaceSelector);
-    
-    // class_addMethod:如果发现方法已经存在，会失败返回，也可以用来做检查用,我们这里是为了避免源方法没有实现的情况;如果方法没有存在,我们则先尝试添加被替换的方法的实现
-    BOOL didAddMethod = class_addMethod(class,
-                                        originalSelector,
-                                        method_getImplementation(replaceMeathod),
-                                        method_getTypeEncoding(replaceMeathod));
-    if (didAddMethod) {
-        // 原方法未实现，则替换原方法防止crash
-        class_replaceMethod(class,
-                            replaceSelector,
-                            method_getImplementation(origMethod),
-                            method_getTypeEncoding(origMethod));
-    } else {
-        // 添加失败：说明源方法已经有实现，直接将两个方法的实现交换即
-        method_exchangeImplementations(origMethod, replaceMeathod);
-    }
-}
-
-+ (void)classSwizzleMethodWithClass:(Class _Nonnull)klass orginalMethod:(SEL _Nonnull)originalSelector replaceMethod:(SEL _Nonnull)replaceSelector {
-    
-    // Method中包含IMP函数指针，通过替换IMP，使SEL调用不同函数实现
-    Method origMethod = class_getClassMethod(klass, originalSelector);
-    Method replaceMeathod = class_getClassMethod(klass, replaceSelector);
-    Class metaKlass = objc_getMetaClass(NSStringFromClass(klass).UTF8String);
-    
-    // class_addMethod:如果发现方法已经存在，会失败返回，也可以用来做检查用,我们这里是为了避免源方法没有实现的情况;如果方法没有存在,我们则先尝试添加被替换的方法的实现
-    BOOL didAddMethod = class_addMethod(metaKlass,
-                                        originalSelector,
-                                        method_getImplementation(replaceMeathod),
-                                        method_getTypeEncoding(replaceMeathod));
-    if (didAddMethod) {
-        // 原方法未实现，则替换原方法防止crash
-        class_replaceMethod(metaKlass,
-                            replaceSelector,
-                            method_getImplementation(origMethod),
-                            method_getTypeEncoding(origMethod));
-    } else {
-        // 添加失败：说明源方法已经有实现，直接将两个方法的实现交换即
-        method_exchangeImplementations(origMethod, replaceMeathod);
-    }
-}
-
-+ (void)instanceSwizzleMethodWithClass:(Class _Nonnull)klass orginalMethod:(SEL _Nonnull)originalSelector replaceMethod:(SEL _Nonnull)replaceSelector {
-    Method origMethod = class_getInstanceMethod(klass, originalSelector);
-    Method replaceMeathod = class_getInstanceMethod(klass, replaceSelector);
-    
-    // class_addMethod:如果发现方法已经存在，会失败返回，也可以用来做检查用,我们这里是为了避免源方法没有实现的情况;如果方法没有存在,我们则先尝试添加被替换的方法的实现
-    BOOL didAddMethod = class_addMethod(klass,
-                                        originalSelector,
-                                        method_getImplementation(replaceMeathod),
-                                        method_getTypeEncoding(replaceMeathod));
-    if (didAddMethod) {
-        // 原方法未实现，则替换原方法防止crash
-        class_replaceMethod(klass,
-                            replaceSelector,
-                            method_getImplementation(origMethod),
-                            method_getTypeEncoding(origMethod));
-    } else {
-        // 添加失败：说明源方法已经有实现，直接将两个方法的实现交换即
-        method_exchangeImplementations(origMethod, replaceMeathod);
-    }
-}
-
++ (void)swizzleClassMethod:(SEL)original replaceMethod:(SEL)replacement { MYExchange(object_getClass(self), original, replacement); }
+- (void)instanceSwizzleMethod:(SEL)original replaceMethod:(SEL)replacement { MYExchange([self class], original, replacement); }
++ (void)classSwizzleMethodWithClass:(Class)cls orginalMethod:(SEL)original replaceMethod:(SEL)replacement { MYExchange(object_getClass(cls), original, replacement); }
++ (void)instanceSwizzleMethodWithClass:(Class)cls orginalMethod:(SEL)original replaceMethod:(SEL)replacement { MYExchange(cls, original, replacement); }
 @end

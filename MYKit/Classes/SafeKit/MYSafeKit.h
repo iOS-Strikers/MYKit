@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_OPTIONS(NSUInteger, MYSafeKitShieldType) {
     MYSafeKitShieldTypeUnrecognizedSelector = 1 << 1,
     MYSafeKitShieldTypeContainer = 1 << 2,
@@ -31,7 +33,7 @@ typedef NS_OPTIONS(NSUInteger, MYSafeKitShieldType) {
  
  @param record 汇报中心
  */
-+ (void)registerRecordHandler:(id<MYSafeKitRecordProtocol>)record;
++ (void)registerRecordHandler:(nullable id<MYSafeKitRecordProtocol>)record;
 
 /**
  注册 SDK，默认只要开启就打开防 Crash
@@ -40,9 +42,17 @@ typedef NS_OPTIONS(NSUInteger, MYSafeKitShieldType) {
 
 /**
  注册 SDK，根据不同 ability 开启防 Crash
- 本注册方式不包含 MYSafeKitShieldTypeAll 类型
+ 支持单项、组合及 MYSafeKitShieldTypeAll；注册不可撤销。
  @param ability ability
  */
 + (void)registerSafeKitShieldWithAbility:(MYSafeKitShieldType)ability;
 
+/** Register an exact-class fallback signature; enable UnrecognizedSelector separately.
+ The caller guarantees the complete encoding matches a non-variadic call. Unsupported
+ or conflicting encodings return NO. For class methods pass the metaclass.
+ Existing custom forwarding and its exceptions retain precedence. */
++ (BOOL)registerFallbackForClass:(Class)cls selector:(SEL)selector typeEncoding:(const char *)encoding;
+
 @end
+
+NS_ASSUME_NONNULL_END

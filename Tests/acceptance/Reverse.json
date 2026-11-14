@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "criteria": [
+    {
+      "id": "Reverse-testNativeSemanticsAndIsolation",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testNativeSemanticsAndIsolation"
+      ]
+    },
+    {
+      "id": "Reverse-testSwizzleInheritanceMissingMethodsAndIdempotence",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testSwizzleInheritanceMissingMethodsAndIdempotence"
+      ]
+    },
+    {
+      "id": "Reverse-testRepeatAndConcurrentRegistration",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testRepeatAndConcurrentRegistration"
+      ]
+    },
+    {
+      "id": "Reverse-testArrayReadsAndRangeOverflow",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testArrayReadsAndRangeOverflow"
+      ]
+    },
+    {
+      "id": "Reverse-testArrayMutationsAtomicAndValid",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testArrayMutationsAtomicAndValid"
+      ]
+    },
+    {
+      "id": "Reverse-testConstructorsAndLargeInput",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testConstructorsAndLargeInput"
+      ]
+    },
+    {
+      "id": "Reverse-testDictionaryMutationAndBridging",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testDictionaryMutationAndBridging"
+      ]
+    },
+    {
+      "id": "Reverse-testStringsAllBoundariesAndBridging",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testStringsAllBoundariesAndBridging"
+      ]
+    },
+    {
+      "id": "Reverse-testKVCDefaultsAndOverrides",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVCDefaultsAndOverrides"
+      ]
+    },
+    {
+      "id": "Reverse-testKVOIdentityOptionsAndRemoval",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOIdentityOptionsAndRemoval"
+      ]
+    },
+    {
+      "id": "Reverse-testKVODuplicateAndContextlessNativeParity",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVODuplicateAndContextlessNativeParity"
+      ]
+    },
+    {
+      "id": "Reverse-testKVOInitialReentryAndPrior",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOInitialReentryAndPrior"
+      ]
+    },
+    {
+      "id": "Reverse-testKVOInitialExceptionLeavesNoRegistration",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOInitialExceptionLeavesNoRegistration"
+      ]
+    },
+    {
+      "id": "Reverse-testKVOLifetimesAndUnobservedDestruction",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOLifetimesAndUnobservedDestruction"
+      ]
+    },
+    {
+      "id": "Reverse-testKVORegistrationBeforeActivationCanBeRemoved",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVORegistrationBeforeActivationCanBeRemoved"
+      ]
+    },
+    {
+      "id": "Reverse-testKVONativeRegistrationReentryIsTracked",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVONativeRegistrationReentryIsTracked"
+      ]
+    },
+    {
+      "id": "Reverse-testKVOInitialSelfRemovalBeforeInstallation",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOInitialSelfRemovalBeforeInstallation"
+      ]
+    },
+    {
+      "id": "Reverse-testStartupHasNoUnavailableGuards",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testStartupHasNoUnavailableGuards"
+      ]
+    },
+    {
+      "id": "Reverse-testKVOFrameworkModelAndRegistrationRollback",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOFrameworkModelAndRegistrationRollback"
+      ]
+    },
+    {
+      "id": "Reverse-testKVOObservedDiesBeforeLivingObserver",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOObservedDiesBeforeLivingObserver"
+      ]
+    },
+    {
+      "id": "Reverse-testKVOConcurrentRegistrations",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOConcurrentRegistrations"
+      ]
+    },
+    {
+      "id": "Reverse-testUnknownTypedFallbackAndRejection",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testUnknownTypedFallbackAndRejection"
+      ]
+    },
+    {
+      "id": "Reverse-testUnknownPreservesResolutionAndForwardingExceptions",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testUnknownPreservesResolutionAndForwardingExceptions"
+      ]
+    },
+    {
+      "id": "Reverse-testNullEveryAllowedSelector",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testNullEveryAllowedSelector"
+      ]
+    },
+    {
+      "id": "Reverse-testNotificationLifetimeAndConcurrentRegistration",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testNotificationLifetimeAndConcurrentRegistration"
+      ]
+    },
+    {
+      "id": "Reverse-testTimerFactoriesAndTargetRelease",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testTimerFactoriesAndTargetRelease"
+      ]
+    },
+    {
+      "id": "Reverse-testTimerDynamicForwarding",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testTimerDynamicForwarding"
+      ]
+    },
+    {
+      "id": "Reverse-testRecordReentryExceptionsAndConcurrency",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testRecordReentryExceptionsAndConcurrency"
+      ]
+    },
+    {
+      "id": "Reverse-testKVOInvalidArguments",
+      "required": true,
+      "tests": [
+        "SafeKitTests/testKVOInvalidArguments"
+      ]
+    }
+  ]
+}

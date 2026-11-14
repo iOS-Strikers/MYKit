@@ -1,0 +1,955 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		032AE5D3E13709DCC212C2EB /* NSMutableArray+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 9228D58D7D072D2B15A09B8D /* NSMutableArray+Safe.m */; };
+		07456F82BF93CAEB61A0BB12 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 513D5A9BDA93518779073FB0 /* Foundation.framework */; };
+		2DE9965A0D8C5689C1839CDB /* SafeKitFixture.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CFA5E2A3653AEB9E62399F40 /* SafeKitFixture.framework */; };
+		39EC9578E2C3489C217A982F /* NSObject+Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E93721671BEB1C1065D41B4 /* NSObject+Swizzle.m */; };
+		3ADAC30F939B845F4B8EC53C /* NSTimer+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 10A172BDF7D5877B8CECD9E0 /* NSTimer+Safe.m */; };
+		43E38B3A25077A16D92D7381 /* NSNotificationCenter+SafeKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E075494B06676CB88B6D914 /* NSNotificationCenter+SafeKit.m */; };
+		4D4E3E7183A344E6951C240D /* NSArray+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 1834444AF9BC9430378886BF /* NSArray+Safe.m */; };
+		57E839B178FD7F56F7B3B703 /* NSMutableDictionary+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9DC84FF50E0BC1B67E03A7 /* NSMutableDictionary+Safe.m */; };
+		5B6B55559BA7641495C33DE5 /* NSDictionary+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = C82D6B5D524D1283AC7805E4 /* NSDictionary+Safe.m */; };
+		6116866137B836F7A7B2B86A /* SafeKitFixture.h in Headers */ = {isa = PBXBuildFile; fileRef = EE443F3167214B17CEF0BF54 /* SafeKitFixture.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6921FAD3E3549F3D13924647 /* SafeKitFixture.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFA5E2A3653AEB9E62399F40 /* SafeKitFixture.framework */; };
+		7E0B26CEC817CBE89CE4211B /* FrameworkModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F8D4B3590DCA132950C2C962 /* FrameworkModel.m */; };
+		83526850A1E206BBCE42AD56 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 513D5A9BDA93518779073FB0 /* Foundation.framework */; };
+		8D8463435FC3AEEB8A0A4A10 /* NSObject+SafeKVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 115CCFFB32A456752AD23E9A /* NSObject+SafeKVO.m */; };
+		942F3413D5B3B302A147AFB0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E7242C41547A7E42DE3EB99C /* main.m */; };
+		966F52A560780D2D6BDAAFE9 /* NSNull+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9A66095E9F3DB26F413069 /* NSNull+Safe.m */; };
+		A5C74074ED89FE5F6FFD608F /* MYSafeKit.m in Sources */ = {isa = PBXBuildFile; fileRef = FA9F5736DEA1B5DF2975752B /* MYSafeKit.m */; };
+		A5E9C6CAB8967BD2386A2A35 /* NSObject+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 84465DE1F8C02D516C496F14 /* NSObject+Safe.m */; };
+		B31769941F51785EFBAC97CB /* NSString+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = 3370A231320187EC903E4C31 /* NSString+Safe.m */; };
+		BB8ED309277601F5B67A2A29 /* MYSafeKitRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 95B06B0B8FBE88900114D2BD /* MYSafeKitRecord.m */; };
+		DDB2FD803A8D59AB4D867AA1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 513D5A9BDA93518779073FB0 /* Foundation.framework */; };
+		E6CE311E9C2EBB9FA16C1942 /* SafeKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = DF175DA3AA1281B0AF578E2D /* SafeKitTests.m */; };
+		F063A34733B4F1810AB159B0 /* MYSafeFoundationContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D406E4271AE575F3D4A5CF8 /* MYSafeFoundationContainer.m */; };
+		FDB2BB0AD671223E7DF08A22 /* NSMutableString+Safe.m in Sources */ = {isa = PBXBuildFile; fileRef = FE741DDAEC61DAB5F40BCD31 /* NSMutableString+Safe.m */; };
+		FF88283DB6F6C2FACEDADA62 /* NSObject+UnknowSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C644F87FF1DDD02822664EA /* NSObject+UnknowSelector.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		25A1188A73401F2B218B8DD7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22331DD81C5CC559259DA03C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD3B86ED81F33A0F026CD97D;
+			remoteInfo = SafeKitHost;
+		};
+		4FDA8A1FADFCC89BE8D48557 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22331DD81C5CC559259DA03C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A21F95EEAD8BC2EE23DBEC64;
+			remoteInfo = SafeKitFixture;
+		};
+		680776924FA4967B33111DEF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22331DD81C5CC559259DA03C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A21F95EEAD8BC2EE23DBEC64;
+			remoteInfo = SafeKitFixture;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DC2DD8C7E46F8B58658AC970 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2DE9965A0D8C5689C1839CDB /* SafeKitFixture.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		10A172BDF7D5877B8CECD9E0 /* NSTimer+Safe.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSTimer+Safe.m"; path = "../MYKit/Classes/SafeKit/NSTimer/NSTimer+Safe.m"; sourceTree = "<group>"; };
+		115CCFFB32A456752AD23E9A /* NSObject+SafeKVO.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+SafeKVO.m"; path = "../MYKit/Classes/SafeKit/KVO/NSObject+SafeKVO.m"; sourceTree = "<group>"; };
+		1356B3AA2BB8B4522181837E /* SafeKitHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SafeKitHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1834444AF9BC9430378886BF /* NSArray+Safe.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSArray+Safe.m"; path = "../MYKit/Classes/SafeKit/FoundationContainer/NSArray+Safe.m"; sourceTree = "<group>"; };
+		2C476C3DA774B0ADB0D25218 /* SafeKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SafeKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C9A66095E9F3DB26F413069 /* NSNull+Safe.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSNull+Safe.m"; path = "../MYKit/Classes/SafeKit/NSNull/NSNull+Safe.m"; sourceTree = "<group>"; };
+		2E075494B06676CB88B6D914 /* NSNotificationCenter+SafeKit.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSNotificationCenter+SafeKit.m"; path = "../MYKit/Classes/SafeKit/Notification/NSNotificationCenter+SafeKit.m"; sourceTree = "<group>"; };
+		3370A231320187EC903E4C31 /* NSString+Safe.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSString+Safe.m"; path = "../MYKit/Classes/SafeKit/FoundationContainer/NSString+Safe.m"; sourceTree = "<group>"; };
+		3A9DC84FF50E0BC1B67E03A7 /* NSMutableDictionary+Safe.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSMutableDictionary+Safe.m"; path = "../MYKit/Classes/SafeKit/FoundationContainer/NSMutableDictionary+Safe.m"; sourceTree = "<group>"; };
+		3E93721671BEB1C1065D41B4 /* NSObject+Swizzle.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+Swizzle.m"; path = "../MYKit/Classes/Foundation/NSObject/NSObject+Swizzle.m"; sourceTree = "<group>"; };
+		513D5A9BDA93518779073FB0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		84465DE1F8C02D516C496F14 /* NSObject+Safe.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+Safe.m"; path = "../MYKit/Classes/SafeKit/FoundationContainer/NSObject+Safe.m"; sourceTree = "<group>"; };
+		8C644F87FF1DDD02822664EA /* NSObject+UnknowSelector.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+UnknowSelector.m"; path = "../MYKit/Classes/SafeKit/UnknowSelector/NSObject+UnknowSelector.m"; sourceTree = "<group>"; };
+		8D406E4271AE575F3D4A5CF8 /* MYSafeFoundationContainer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MYSafeFoundationContainer.m; path = ../MYKit/Classes/SafeKit/FoundationContainer/MYSafeFoundationContainer.m; sourceTree = "<group>"; };
+		9228D58D7D072D2B15A09B8D /* NSMutableArray+Safe.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSMutableArray+Safe.m"; path = "../MYKit/Classes/SafeKit/FoundationContainer/NSMutableArray+Safe.m"; sourceTree = "<group>"; };
+		95B06B0B8FBE88900114D2BD /* MYSafeKitRecord.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MYSafeKitRecord.m; path = ../MYKit/Classes/SafeKit/Record/MYSafeKitRecord.m; sourceTree = "<group>"; };
+		C82D6B5D524D1283AC7805E4 /* NSDictionary+Safe.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+Safe.m"; path = "../MYKit/Classes/SafeKit/FoundationContainer/NSDictionary+Safe.m"; sourceTree = "<group>"; };
+		CFA5E2A3653AEB9E62399F40 /* SafeKitFixture.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SafeKitFixture.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF175DA3AA1281B0AF578E2D /* SafeKitTests.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = SafeKitTests.m; sourceTree = "<group>"; };
+		E7242C41547A7E42DE3EB99C /* main.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Host/main.m; sourceTree = "<group>"; };
+		EE443F3167214B17CEF0BF54 /* SafeKitFixture.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SafeKitFixture.h; path = Fixture/SafeKitFixture.h; sourceTree = "<group>"; };
+		F8D4B3590DCA132950C2C962 /* FrameworkModel.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FrameworkModel.m; path = Fixture/FrameworkModel.m; sourceTree = "<group>"; };
+		FA9F5736DEA1B5DF2975752B /* MYSafeKit.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = MYSafeKit.m; path = ../MYKit/Classes/SafeKit/MYSafeKit.m; sourceTree = "<group>"; };
+		FE741DDAEC61DAB5F40BCD31 /* NSMutableString+Safe.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSMutableString+Safe.m"; path = "../MYKit/Classes/SafeKit/FoundationContainer/NSMutableString+Safe.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0F60161C58493D4C74BCC890 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DDB2FD803A8D59AB4D867AA1 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		14FA7C4C046299711C668FCF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				07456F82BF93CAEB61A0BB12 /* Foundation.framework in Frameworks */,
+				6921FAD3E3549F3D13924647 /* SafeKitFixture.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DB7174A3492CEB9EC0D9B01 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83526850A1E206BBCE42AD56 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		23BB7745DA902C8E09B86B91 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4AE795029DF1096150FCC653 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		329F5820CF7050F85C7306F5 /* Fixture */ = {
+			isa = PBXGroup;
+			children = (
+				F8D4B3590DCA132950C2C962 /* FrameworkModel.m */,
+				EE443F3167214B17CEF0BF54 /* SafeKitFixture.h */,
+			);
+			name = Fixture;
+			sourceTree = "<group>";
+		};
+		353287D8740B0E7C65F1CC10 = {
+			isa = PBXGroup;
+			children = (
+				F3B5AE01A39F89B394F36845 /* Products */,
+				23BB7745DA902C8E09B86B91 /* Frameworks */,
+				329F5820CF7050F85C7306F5 /* Fixture */,
+				789C4A446AABD7BEEDB63B14 /* Sources */,
+			);
+			sourceTree = "<group>";
+		};
+		4AE795029DF1096150FCC653 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				513D5A9BDA93518779073FB0 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		789C4A446AABD7BEEDB63B14 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				8D406E4271AE575F3D4A5CF8 /* MYSafeFoundationContainer.m */,
+				1834444AF9BC9430378886BF /* NSArray+Safe.m */,
+				C82D6B5D524D1283AC7805E4 /* NSDictionary+Safe.m */,
+				9228D58D7D072D2B15A09B8D /* NSMutableArray+Safe.m */,
+				3A9DC84FF50E0BC1B67E03A7 /* NSMutableDictionary+Safe.m */,
+				FE741DDAEC61DAB5F40BCD31 /* NSMutableString+Safe.m */,
+				84465DE1F8C02D516C496F14 /* NSObject+Safe.m */,
+				3370A231320187EC903E4C31 /* NSString+Safe.m */,
+				115CCFFB32A456752AD23E9A /* NSObject+SafeKVO.m */,
+				FA9F5736DEA1B5DF2975752B /* MYSafeKit.m */,
+				2C9A66095E9F3DB26F413069 /* NSNull+Safe.m */,
+				10A172BDF7D5877B8CECD9E0 /* NSTimer+Safe.m */,
+				2E075494B06676CB88B6D914 /* NSNotificationCenter+SafeKit.m */,
+				95B06B0B8FBE88900114D2BD /* MYSafeKitRecord.m */,
+				8C644F87FF1DDD02822664EA /* NSObject+UnknowSelector.m */,
+				3E93721671BEB1C1065D41B4 /* NSObject+Swizzle.m */,
+				E7242C41547A7E42DE3EB99C /* main.m */,
+				DF175DA3AA1281B0AF578E2D /* SafeKitTests.m */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		F3B5AE01A39F89B394F36845 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1356B3AA2BB8B4522181837E /* SafeKitHost.app */,
+				2C476C3DA774B0ADB0D25218 /* SafeKitTests.xctest */,
+				CFA5E2A3653AEB9E62399F40 /* SafeKitFixture.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		AF9C720159D8AC0BA63E281B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6116866137B836F7A7B2B86A /* SafeKitFixture.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		4D5FB8B3AEA965D33E541F47 /* SafeKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E10F45DD7A3976F6F7281DE9 /* Build configuration list for PBXNativeTarget "SafeKitTests" */;
+			buildPhases = (
+				795EBF941E912B6B5578122F /* Sources */,
+				14FA7C4C046299711C668FCF /* Frameworks */,
+				9737DD7CA3D731F6B334EBD9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7462CDB2C3A24C76C5768111 /* PBXTargetDependency */,
+				0E0524BBA69E38415532FAA5 /* PBXTargetDependency */,
+			);
+			name = SafeKitTests;
+			productName = SafeKitTests;
+			productReference = 2C476C3DA774B0ADB0D25218 /* SafeKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A21F95EEAD8BC2EE23DBEC64 /* SafeKitFixture */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC68EF8EBB3EAC9DA3E62A0B /* Build configuration list for PBXNativeTarget "SafeKitFixture" */;
+			buildPhases = (
+				AF9C720159D8AC0BA63E281B /* Headers */,
+				60BFA42C12B43B89BF4EA58D /* Sources */,
+				0F60161C58493D4C74BCC890 /* Frameworks */,
+				359423F85D708E1A6224FD6B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SafeKitFixture;
+			productName = SafeKitFixture;
+			productReference = CFA5E2A3653AEB9E62399F40 /* SafeKitFixture.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		DD3B86ED81F33A0F026CD97D /* SafeKitHost */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04EA6444003BE02C3D4FDF58 /* Build configuration list for PBXNativeTarget "SafeKitHost" */;
+			buildPhases = (
+				E49D5E782B3EDC0AF6CFA369 /* Sources */,
+				5DB7174A3492CEB9EC0D9B01 /* Frameworks */,
+				432BA5F8EFE3DFA919DDC0D4 /* Resources */,
+				DC2DD8C7E46F8B58658AC970 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2BFFD5A69DE4E562971C1E3F /* PBXTargetDependency */,
+			);
+			name = SafeKitHost;
+			productName = SafeKitHost;
+			productReference = 1356B3AA2BB8B4522181837E /* SafeKitHost.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		22331DD81C5CC559259DA03C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 553A52EE9D72186537490A98 /* Build configuration list for PBXProject "SafeKitTests" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 353287D8740B0E7C65F1CC10;
+			minimizedProjectReferenceProxies = 0;
+			preferredProjectObjectVersion = 100;
+			productRefGroup = F3B5AE01A39F89B394F36845 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DD3B86ED81F33A0F026CD97D /* SafeKitHost */,
+				4D5FB8B3AEA965D33E541F47 /* SafeKitTests */,
+				A21F95EEAD8BC2EE23DBEC64 /* SafeKitFixture */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		359423F85D708E1A6224FD6B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		432BA5F8EFE3DFA919DDC0D4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9737DD7CA3D731F6B334EBD9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		60BFA42C12B43B89BF4EA58D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E0B26CEC817CBE89CE4211B /* FrameworkModel.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		795EBF941E912B6B5578122F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E6CE311E9C2EBB9FA16C1942 /* SafeKitTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E49D5E782B3EDC0AF6CFA369 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F063A34733B4F1810AB159B0 /* MYSafeFoundationContainer.m in Sources */,
+				4D4E3E7183A344E6951C240D /* NSArray+Safe.m in Sources */,
+				5B6B55559BA7641495C33DE5 /* NSDictionary+Safe.m in Sources */,
+				032AE5D3E13709DCC212C2EB /* NSMutableArray+Safe.m in Sources */,
+				57E839B178FD7F56F7B3B703 /* NSMutableDictionary+Safe.m in Sources */,
+				FDB2BB0AD671223E7DF08A22 /* NSMutableString+Safe.m in Sources */,
+				A5E9C6CAB8967BD2386A2A35 /* NSObject+Safe.m in Sources */,
+				B31769941F51785EFBAC97CB /* NSString+Safe.m in Sources */,
+				8D8463435FC3AEEB8A0A4A10 /* NSObject+SafeKVO.m in Sources */,
+				A5C74074ED89FE5F6FFD608F /* MYSafeKit.m in Sources */,
+				966F52A560780D2D6BDAAFE9 /* NSNull+Safe.m in Sources */,
+				3ADAC30F939B845F4B8EC53C /* NSTimer+Safe.m in Sources */,
+				43E38B3A25077A16D92D7381 /* NSNotificationCenter+SafeKit.m in Sources */,
+				BB8ED309277601F5B67A2A29 /* MYSafeKitRecord.m in Sources */,
+				FF88283DB6F6C2FACEDADA62 /* NSObject+UnknowSelector.m in Sources */,
+				39EC9578E2C3489C217A982F /* NSObject+Swizzle.m in Sources */,
+				942F3413D5B3B302A147AFB0 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0E0524BBA69E38415532FAA5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SafeKitFixture;
+			target = A21F95EEAD8BC2EE23DBEC64 /* SafeKitFixture */;
+			targetProxy = 4FDA8A1FADFCC89BE8D48557 /* PBXContainerItemProxy */;
+		};
+		2BFFD5A69DE4E562971C1E3F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SafeKitFixture;
+			target = A21F95EEAD8BC2EE23DBEC64 /* SafeKitFixture */;
+			targetProxy = 680776924FA4967B33111DEF /* PBXContainerItemProxy */;
+		};
+		7462CDB2C3A24C76C5768111 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SafeKitHost;
+			target = DD3B86ED81F33A0F026CD97D /* SafeKitHost */;
+			targetProxy = 25A1188A73401F2B218B8DD7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		251D2ED786794262BD65B728 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../MYKit/Classes/Core\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSArray\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSBundle\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSData\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSDate\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSDictionary\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSMutableArray\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSNumber\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSObject\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSString\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSURL\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSUserDefaults\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/FoundationContainer\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/KVO\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/NSNull\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/NSTimer\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/Notification\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/Record\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/UnknowSelector\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIAlertController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIApplication\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIBarButtonItem\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIButton\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UICollectionView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIColor\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIDevice\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIImage\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIImageView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UILabel\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationBar\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationItem\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIResponder\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIScreen\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIScrollView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITableView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITextField\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITextView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIViewController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIWindow\"",
+				);
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.mykit.SafeKitFixture;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		418163FE0AED2C826AE57358 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				DEFINES_MODULE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../MYKit/Classes/Core\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSArray\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSBundle\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSData\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSDate\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSDictionary\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSMutableArray\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSNumber\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSObject\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSString\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSURL\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSUserDefaults\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/FoundationContainer\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/KVO\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/NSNull\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/NSTimer\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/Notification\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/Record\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/UnknowSelector\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIAlertController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIApplication\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIBarButtonItem\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIButton\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UICollectionView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIColor\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIDevice\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIImage\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIImageView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UILabel\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationBar\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationItem\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIResponder\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIScreen\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIScrollView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITableView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITextField\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITextView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIViewController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIWindow\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.mykit.SafeKitHost;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9664CBFCF5C0BF3C3E90FD44 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				DEFINES_MODULE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../MYKit/Classes/Core\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSArray\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSBundle\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSData\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSDate\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSDictionary\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSMutableArray\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSNumber\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSObject\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSString\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSURL\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSUserDefaults\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/FoundationContainer\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/KVO\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/NSNull\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/NSTimer\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/Notification\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/Record\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/UnknowSelector\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIAlertController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIApplication\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIBarButtonItem\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIButton\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UICollectionView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIColor\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIDevice\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIImage\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIImageView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UILabel\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationBar\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationItem\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIResponder\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIScreen\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIScrollView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITableView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITextField\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITextView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIViewController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIWindow\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.mykit.SafeKitTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SafeKitHost.app/SafeKitHost";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A4324817F8EE6F08843FB732 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A9C057E163039A7C9E17F1EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../MYKit/Classes/Core\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSArray\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSBundle\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSData\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSDate\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSDictionary\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSMutableArray\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSNumber\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSObject\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSString\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSURL\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSUserDefaults\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/FoundationContainer\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/KVO\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/NSNull\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/NSTimer\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/Notification\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/Record\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/UnknowSelector\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIAlertController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIApplication\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIBarButtonItem\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIButton\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UICollectionView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIColor\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIDevice\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIImage\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIImageView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UILabel\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationBar\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationItem\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIResponder\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIScreen\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIScrollView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITableView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITextField\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITextView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIViewController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIWindow\"",
+				);
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.mykit.SafeKitFixture;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		B792EF219A45113B3FDFECAC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D7CFBEBFFC81FCEFA871FBCE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				DEFINES_MODULE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../MYKit/Classes/Core\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSArray\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSBundle\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSData\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSDate\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSDictionary\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSMutableArray\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSNumber\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSObject\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSString\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSURL\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSUserDefaults\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/FoundationContainer\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/KVO\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/NSNull\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/NSTimer\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/Notification\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/Record\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/UnknowSelector\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIAlertController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIApplication\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIBarButtonItem\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIButton\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UICollectionView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIColor\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIDevice\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIImage\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIImageView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UILabel\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationBar\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationItem\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIResponder\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIScreen\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIScrollView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITableView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITextField\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITextView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIViewController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIWindow\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.mykit.SafeKitHost;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FA93729652ADD012F743FE67 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGNING_ALLOWED = NO;
+				DEFINES_MODULE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../MYKit/Classes/Core\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSArray\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSBundle\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSData\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSDate\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSDictionary\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSMutableArray\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSNumber\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSObject\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSString\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSURL\"",
+					"\"$(SRCROOT)/../MYKit/Classes/Foundation/NSUserDefaults\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/FoundationContainer\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/KVO\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/NSNull\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/NSTimer\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/Notification\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/Record\"",
+					"\"$(SRCROOT)/../MYKit/Classes/SafeKit/UnknowSelector\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIAlertController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIApplication\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIBarButtonItem\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIButton\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UICollectionView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIColor\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIDevice\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIImage\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIImageView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UILabel\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationBar\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UINavigationItem\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIResponder\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIScreen\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIScrollView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITableView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITextField\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UITextView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIView\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIViewController\"",
+					"\"$(SRCROOT)/../MYKit/Classes/UIKit/UIWindow\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = org.mykit.SafeKitTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SafeKitHost.app/SafeKitHost";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		04EA6444003BE02C3D4FDF58 /* Build configuration list for PBXNativeTarget "SafeKitHost" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				418163FE0AED2C826AE57358 /* Release */,
+				D7CFBEBFFC81FCEFA871FBCE /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		553A52EE9D72186537490A98 /* Build configuration list for PBXProject "SafeKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B792EF219A45113B3FDFECAC /* Debug */,
+				A4324817F8EE6F08843FB732 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BC68EF8EBB3EAC9DA3E62A0B /* Build configuration list for PBXNativeTarget "SafeKitFixture" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9C057E163039A7C9E17F1EB /* Release */,
+				251D2ED786794262BD65B728 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E10F45DD7A3976F6F7281DE9 /* Build configuration list for PBXNativeTarget "SafeKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9664CBFCF5C0BF3C3E90FD44 /* Release */,
+				FA93729652ADD012F743FE67 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 22331DD81C5CC559259DA03C /* Project object */;
+}

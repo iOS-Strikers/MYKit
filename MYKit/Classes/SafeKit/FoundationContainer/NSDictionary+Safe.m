@@ -1,92 +1,38 @@
-//
-//  NSDictionary+Safe.m
-//  Footstone
-//
-//  Created by 李阳 on 4/5/2018.
-//  Copyright © 2018 BetrayalPromise. All rights reserved.
-//
-
 #import "NSDictionary+Safe.h"
-#import "NSObject+Swizzle.h"
-#import "MYSafeKitRecord.h"
+#import "MYSafeContainerInternal.h"
 
-@implementation NSDictionary (Safe)
-
-+ (void)registerClassPairMethodsInDictionary {
-    Class dictionaryClass = NSClassFromString(@"NSDictionary");
-    Class __NSPlaceholderDictionaryClass = NSClassFromString(@"__NSPlaceholderDictionary");
-    
-    [self classSwizzleMethodWithClass:dictionaryClass orginalMethod:@selector(dictionaryWithObjects:forKeys:count:) replaceMethod:@selector(safe_dictionaryWithObjects:forKeys:count:)];
-    
-    [self classSwizzleMethodWithClass:dictionaryClass orginalMethod:@selector(dictionaryWithObjects:forKeys:) replaceMethod:@selector(safe_dictionaryWithObjects:forKeys:)];
-    
-    [self instanceSwizzleMethodWithClass:__NSPlaceholderDictionaryClass orginalMethod:@selector(initWithObjects:forKeys:count:) replaceMethod:@selector(safe_initWithObjects:forKeys:count:)];
-}
-
-+ (instancetype)safe_dictionaryWithObjects:(id _Nonnull const [])objects forKeys:(id<NSCopying>  _Nonnull const [])keys count:(NSUInteger)cnt {
-    NSUInteger index = 0;
-    id  _Nonnull __unsafe_unretained newObjects[cnt];
-    id  _Nonnull __unsafe_unretained newkeys[cnt];
-    for (int i = 0; i < cnt; i++) {
-        id tmpItem = objects[i];
-        id tmpKey = keys[i];
-        if (tmpItem == nil || tmpKey == nil) {
-            NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : NSDictionary constructor appear nil",
-                                [self class], NSStringFromSelector(_cmd)];
-            [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeContainer)];
-            continue;
-        }
-        newObjects[index] = objects[i];
-        newkeys[index] = keys[i];
-        index++;
-    }
-    return [self safe_dictionaryWithObjects:objects forKeys:keys count:cnt];
-}
-
-+ (instancetype)safe_dictionaryWithObjects:(NSArray *)objects forKeys:(NSArray<id<NSCopying>> *)keys {
-    if (objects.count != keys.count) {
-        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : count of objects (%ld) differs from count of keys (%ld)",
-                            [self class], NSStringFromSelector(_cmd), (unsigned long)objects.count, (unsigned long)keys.count];
-        [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeContainer)];
-        return nil;
-    }
-    NSUInteger index = 0;
-    id _Nonnull objectsNew[objects.count];
-    id <NSCopying> _Nonnull keysNew[keys.count];
-    for (int i = 0; i<keys.count; i++) {
-        if (objects[i] && keys[i]) {
-            objectsNew[index] = objects[i];
-            keysNew[index] = keys[i];
-            index ++;
-        } else {
-            NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : attempt to insert nil object from objects[%d]",
-                                [self class], NSStringFromSelector(_cmd), i];
-            [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeContainer)];
-        }
-    }
-    return [self safe_dictionaryWithObjects:[NSArray arrayWithObjects:objectsNew count:index] forKeys:[NSArray arrayWithObjects:keysNew count:index]];
-}
-
-- (instancetype)safe_initWithObjects:(id  _Nonnull const [])objects forKeys:(id<NSCopying>  _Nonnull const [])keys count:(NSUInteger)cnt{
-    NSUInteger index = 0;
-    id _Nonnull objectsNew[cnt];
-    id <NSCopying> _Nonnull keysNew[cnt];
-    //'*** -[NSDictionary initWithObjects:forKeys:]: count of objects (1) differs from count of keys (0)'
-    for (int i = 0; i<cnt; i++) {
-        if (objects[i] && keys[i]) { // 可能存在nil的情况
-            objectsNew[index] = objects[i];
-            keysNew[index] = keys[i];
-            index ++;
-        } else {
-            NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : attempt to insert nil object from objects[%d]",
-                                [self class], NSStringFromSelector(_cmd), i];
-            [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeContainer)];
-        }
-    }
-    return [self safe_initWithObjects:objectsNew forKeys:keysNew count:index];
-}
-
+@interface NSDictionary (MYConstructor)
+- (instancetype)my_safe_initWithObjects:(const id [])objects forKeys:(const id<NSCopying> [])keys count:(NSUInteger)count __attribute__((objc_method_family(init)));
 @end
-
-
-
+@implementation NSDictionary (Safe)
++ (void)registerClassPairMethodsInDictionary {
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        for (id sample in @[[NSDictionary alloc], [NSMutableDictionary alloc]]) {
+            [NSObject instanceSwizzleMethodWithClass:object_getClass(sample) orginalMethod:@selector(initWithObjects:forKeys:count:) replaceMethod:@selector(my_safe_initWithObjects:forKeys:count:)];
+        }
+        SEL sel = @selector(dictionaryWithObjects:forKeys:);
+        MYGuard(object_getClass(self), sel, "@@:@@", ^id(IMP original) {
+            return ^id(id obj, NSArray *objects, NSArray *keys) {
+                if (objects.count != keys.count) { MYContainerReport(sel); return nil; }
+                return ((id (*)(id, SEL, id, id))original)(obj, sel, objects, keys);
+            };
+        });
+    });
+}
+- (instancetype)my_safe_initWithObjects:(const id [])objects forKeys:(const id<NSCopying> [])keys count:(NSUInteger)count {
+    if (count && (!objects || !keys)) { MYContainerReport(_cmd); return nil; }
+    NSUInteger valid = 0;
+    for (NSUInteger i = 0; i < count; i++) if (objects[i] && keys[i]) valid++;
+    if (valid == count) return [self my_safe_initWithObjects:objects forKeys:keys count:count];
+    MYContainerReport(@selector(initWithObjects:forKeys:count:));
+    if (valid > SIZE_MAX / sizeof(id)) return nil;
+    id __unsafe_unretained *filteredObjects = valid ? (id __unsafe_unretained *)malloc(valid * sizeof(id)) : NULL;
+    id __unsafe_unretained *filteredKeys = valid ? (id __unsafe_unretained *)malloc(valid * sizeof(id)) : NULL;
+    if (valid && (!filteredObjects || !filteredKeys)) { free(filteredObjects); free(filteredKeys); return nil; }
+    NSUInteger j = 0;
+    for (NSUInteger i = 0; i < count; i++) if (objects[i] && keys[i]) { filteredObjects[j] = objects[i]; filteredKeys[j++] = keys[i]; }
+    @try { return [self my_safe_initWithObjects:filteredObjects forKeys:filteredKeys count:valid]; }
+    @finally { free(filteredObjects); free(filteredKeys); }
+}
+@end

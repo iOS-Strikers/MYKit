@@ -1,316 +1,180 @@
-//
-//  NSObject+SafeKVO.m
-//  MYKitDemo
-//
-//  Created by QMMac on 2018/7/30.
-//  Copyright © 2018 com.51fanxing. All rights reserved.
-//
-
 #import "NSObject+SafeKVO.h"
 #import "NSObject+Swizzle.h"
 #import "MYSafeKitRecord.h"
-#import <dlfcn.h>
-#include <CommonCrypto/CommonCrypto.h>
-#include <zlib.h>
 
-static inline NSString *kvo_md5StringOfObject(NSObject *object) {
-    NSString *string = [NSString stringWithFormat:@"%p",object];
-    const char *str = string.UTF8String;
-    uint8_t buffer[CC_MD5_DIGEST_LENGTH];
-    CC_MD5(str, (CC_LONG)strlen(str), buffer);
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
-        [output appendFormat:@"%02x", buffer[i]];
-    }
-    return output;
-}
-
-@interface KVOInfo : NSObject {
-    @package
-    void *_context;
-    NSKeyValueObservingOptions _options;
-    __weak NSObject *_observer;
-    __weak NSString *_keyPath;
-    NSString *_md5Str;
-}
-
+@interface MYKVORegistration : NSObject
+@property (nonatomic, weak) NSObject *observed;
+@property (nonatomic, weak) NSObject *observer;
+@property (nonatomic, copy) NSString *keyPath;
+@property (nonatomic) void *context;
+@property (nonatomic) BOOL active;
 @end
-
-@implementation KVOInfo
-
+@interface MYKVOState : NSObject
+@property (nonatomic, strong) NSMutableArray<MYKVORegistration *> *registrations;
+@property (nonatomic, strong) NSHashTable<MYKVORegistration *> *observing;
 @end
-
-@interface XXKVOProxy : NSObject {
-    NSMutableDictionary<NSString*, NSMutableArray<NSObject *> *> *_keyPathMaps;
-    
-    dispatch_semaphore_t _addKvoProxyLock;
-    dispatch_semaphore_t _removeKvoProxyLock;
-}
-
-/**
- 将添加kvo时的相关信息加入到关系maps中，对应原有的添加观察者
- 带成功和失败的回调
- */
-- (void)addKVOInfoToMapsWithObserver:(NSObject *)observer
-                          forKeyPath:(NSString *)keyPath
-                             options:(NSKeyValueObservingOptions)options
-                             context:(void *)context
-                             success:(void(^)(void))success
-                             failure:(void(^)(NSString *error))failure;
-
-/**
- 从关系maps中移除观察者 对应原有的移除观察者操作
- */
-- (void)removeKVOInfoInMapsWithObserver:(NSObject *)observer
-                             forKeyPath:(NSString *)keyPath
-                                success:(void(^)(void))success
-                                failure:(void(^)(NSString *error))failure;
-
-/**
- 获取所有对应的keyPaths
- */
-- (NSArray *)getAllKeypaths;
-
-@end
-
-@implementation XXKVOProxy
-
+@implementation MYKVOState
 - (instancetype)init {
-    if (self = [super init]) {
-        _keyPathMaps = [NSMutableDictionary dictionary];
-        _addKvoProxyLock = dispatch_semaphore_create(1);
-        _removeKvoProxyLock = dispatch_semaphore_create(1);
-    }
+    if ((self = [super init])) { _registrations = [NSMutableArray new]; _observing = [NSHashTable weakObjectsHashTable]; }
     return self;
 }
-
-- (void)addKVOInfoToMapsWithObserver:(NSObject *)observer
-                          forKeyPath:(NSString *)keyPath
-                             options:(NSKeyValueObservingOptions)options
-                             context:(void *)context
-                             success:(void(^)(void))success
-                             failure:(void(^)(NSString *error))failure {
-    dispatch_semaphore_wait(_addKvoProxyLock, DISPATCH_TIME_FOREVER);
-    // 先判断有没有重复添加，上报 KVO 多次添加，没有的话，添加到数组中
-    NSMutableArray <NSObject *> *kvoInfos = [self getKVOInfosForKeypath:keyPath];
-    
-    // 多次添加 KVO
-    if (kvoInfos.count > 0) {
-        
-        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : KVO add Observer to many timers.",
-                            [self class], NSStringFromSelector(_cmd)];
-        if (failure) {
-            failure(reason);
-        }
-    } else {
-        KVOInfo *info = [[KVOInfo alloc]init];
-        info->_observer = observer;
-        info->_md5Str = kvo_md5StringOfObject(observer);
-        info->_keyPath = keyPath;
-        info->_options = options;
-        info->_context = context;
-        [kvoInfos addObject:info];
-        
-        // 设置keyPath对应的观察者数组
-        if (![_keyPathMaps.allKeys containsObject:keyPath]) {
-            if (keyPath) {
-                _keyPathMaps[keyPath] = kvoInfos;
-            }
-        }
-        if (success) {
-            success();
-        }
-    }
-    dispatch_semaphore_signal(_addKvoProxyLock);
-}
-
-- (void)removeKVOInfoInMapsWithObserver:(NSObject *)observer
-                             forKeyPath:(NSString *)keyPath
-                                success:(void(^)(void))success
-                                failure:(void(^)(NSString *error))failure {
-    
-    dispatch_semaphore_wait(_removeKvoProxyLock, DISPATCH_TIME_FOREVER);
-    
-    NSMutableArray <NSObject *> *kvoInfos = [self getKVOInfosForKeypath:keyPath];
-    
-    if (kvoInfos.count == 0) {
-        
-        NSString *reason = [NSString stringWithFormat:@"target is %@ method is %@, reason : KVO remove Observer to many times.",
-                            [self class], NSStringFromSelector(_cmd)];
-        
-        if (failure) {
-            failure(reason);
-        }
-    } else {
-        
-        KVOInfo *kvoInfo;
-        for (KVOInfo *obj in kvoInfos) {
-            if ([obj->_md5Str isEqualToString:kvo_md5StringOfObject(observer)]) {
-                kvoInfo = obj;
-                break;
-            }
-        }
-        if (kvoInfo) {
-            [kvoInfos removeObject:kvoInfo];
-            if (kvoInfos.count == 0) { // 说明该keypath没有observer观察，可以移除该键
-                [_keyPathMaps removeObjectForKey:keyPath];
-            }
-        }
-        if (success) {
-            success();
-        }
-    }
-    dispatch_semaphore_signal(_removeKvoProxyLock);
-}
-
-/**
- 获取keypath对应的所有观察者
- */
-- (NSMutableArray *)getKVOInfosForKeypath:(NSString *)keypath {
-    if ([_keyPathMaps.allKeys containsObject:keypath]) {
-        return [_keyPathMaps objectForKey:keypath];
-    } else {
-        return [NSMutableArray array];
-    }
-}
-
-/**
- 获取所有被观察的keypaths
- */
-- (NSArray *)getAllKeypaths{
-    NSArray <NSString *>*keyPaths = _keyPathMaps.allKeys;
-    return keyPaths;
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    NSMutableArray <KVOInfo *> *kvoInfos = [self getKVOInfosForKeypath:keyPath];
-    for (NSObject *observer in kvoInfos) {
-        @try {
-            [observer observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-        } @catch (NSException *exception) {
-            NSString *reason = [NSString stringWithFormat:@"non fatal Error%@",[exception description]];
-            [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeKVO)];
-        }
-    }
-}
-
 @end
 
-@implementation NSObject (SafeKVO)
-
-static void *KVOProtectorKey = &KVOProtectorKey;
-static NSString *const KVOProtectorValue = @"KVOProtectorValue";
-
-+ (void)registerClassPairMethodsInKVO {
-    [self instanceSwizzleMethod:@selector(addObserver:forKeyPath:options:context:) replaceMethod:@selector(safe_addObserver:forKeyPath:options:context:)];
-    
-    [self instanceSwizzleMethod:@selector(removeObserver:forKeyPath:) replaceMethod:@selector(safe_removeObserver:forKeyPath:)];
-    
-    [self instanceSwizzleMethod:@selector(removeObserver:forKeyPath:context:) replaceMethod:@selector(safe_removeObserver:forKeyPath:context:)];
-    
-    [self instanceSwizzleMethod:NSSelectorFromString(@"dealloc") replaceMethod:@selector(safeKvo_dealloc)];
+static char stateKey;
+static NSRecursiveLock *stateLock;
+static IMP originalAdd, originalRemove, originalRemoveContext, originalDealloc;
+// Foundation's context removal may dispatch through its contextless overload.
+typedef struct MYNativeRemovalFrame {
+    __unsafe_unretained id object;
+    __unsafe_unretained id observer;
+    __unsafe_unretained NSString *keyPath;
+    struct MYNativeRemovalFrame *previous;
+} MYNativeRemovalFrame;
+static _Thread_local MYNativeRemovalFrame *nativeRemoval;
+static BOOL MYInternalRemoval(id object, id observer, NSString *keyPath) {
+    if (object_getClass(observer) == [MYKVORegistration class]) return YES;
+    return nativeRemoval && nativeRemoval->object == object && nativeRemoval->observer == observer && [nativeRemoval->keyPath isEqualToString:keyPath];
 }
-
-- (void)safe_addObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context {
-    static struct dl_info app_info;
-    if (app_info.dli_saddr == NULL) {
-        dladdr((__bridge void *)[UIApplication.sharedApplication.delegate class], &app_info);
-    }
-    struct dl_info self_info = {0};
-    dladdr((__bridge void *)[self class], &self_info);
-    
-    //    ignore system class
-    if (self_info.dli_fname == NULL || strcmp(app_info.dli_fname, self_info.dli_fname)) {
-        [self safe_addObserver:observer forKeyPath:keyPath options:options context:context];
-    } else {
-        __weak typeof(self) weakSelf = self;
-        objc_setAssociatedObject(self, KVOProtectorKey, KVOProtectorValue, OBJC_ASSOCIATION_RETAIN);
-        [self.kvoProxy addKVOInfoToMapsWithObserver:observer forKeyPath:keyPath options:options context:context success:^{
-            [weakSelf safe_addObserver:weakSelf.kvoProxy forKeyPath:keyPath options:options context:context];
-        } failure:^(NSString *error) {
-            [MYSafeKitRecord recordFatalWithReason:error errorType:MYSafeKitShieldTypeKVO];
-        }];
-    }
+static MYKVOState *MYState(__unsafe_unretained id object, BOOL create) {
+    MYKVOState *state = objc_getAssociatedObject(object, &stateKey);
+    if (!state && create) { state = [MYKVOState new]; objc_setAssociatedObject(object, &stateKey, state, OBJC_ASSOCIATION_RETAIN_NONATOMIC); }
+    return state;
 }
-
-- (void)safe_removeObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath {
-    static struct dl_info app_info;
-    if (app_info.dli_saddr == NULL) {
-        dladdr((__bridge void *)[UIApplication.sharedApplication.delegate class], &app_info);
-    }
-    struct dl_info self_info = {0};
-    dladdr((__bridge void *)[self class], &self_info);
-    
-    //    ignore system class
-    if (self_info.dli_fname == NULL || strcmp(app_info.dli_fname, self_info.dli_fname)) {
-        [self safe_removeObserver:observer forKeyPath:keyPath];
-    } else {
-        [self.kvoProxy removeKVOInfoInMapsWithObserver:observer forKeyPath:keyPath success:^{
-            [self safe_removeObserver:self.kvoProxy forKeyPath:keyPath];
-        } failure:^(NSString *error) {
-            [MYSafeKitRecord recordFatalWithReason:error errorType:MYSafeKitShieldTypeKVO];
-        }];
-    }
+static void MYNativeRemove(__unsafe_unretained id observed, MYKVORegistration *registration) {
+    ((void (*)(id, SEL, id, NSString *, void *))originalRemoveContext)(observed, @selector(removeObserver:forKeyPath:context:), registration, registration.keyPath, (__bridge void *)registration);
 }
-
-- (void)safe_removeObserver:(NSObject *)observer forKeyPath:(NSString *)keyPath context:(nullable void *)context {
-    static struct dl_info app_info;
-    if (app_info.dli_saddr == NULL) {
-        dladdr((__bridge void *)[UIApplication.sharedApplication.delegate class], &app_info);
-    }
-    struct dl_info self_info = {0};
-    dladdr((__bridge void *)[self class], &self_info);
-    
-    //    ignore system class
-    if (self_info.dli_fname == NULL || strcmp(app_info.dli_fname, self_info.dli_fname)) {
-        [self safe_removeObserver:observer forKeyPath:keyPath context:context];
-    } else {
-        [self.kvoProxy removeKVOInfoInMapsWithObserver:observer forKeyPath:keyPath success:^{
-            [self safe_removeObserver:self.kvoProxy forKeyPath:keyPath];
-        } failure:^(NSString *error) {
-            [MYSafeKitRecord recordFatalWithReason:error errorType:MYSafeKitShieldTypeKVO];
-        }];
-    }
+static void MYRemoveRegistration(__unsafe_unretained id observed, MYKVORegistration *registration) {
+    if (!registration.active) return;
+    MYNativeRemove(observed, registration);
+    registration.active = NO;
+    [MYState(observed, NO).registrations removeObjectIdenticalTo:registration];
+    NSObject *observer = registration.observer;
+    if (observer) [MYState(observer, NO).observing removeObject:registration];
 }
+@implementation MYKVORegistration
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    [stateLock lock];
+    NSObject *observer = self.active ? self.observer : nil;
+    void *userContext = self.context;
+    [stateLock unlock];
+    // Client exceptions deliberately propagate, exactly as with native KVO.
+    [observer observeValueForKeyPath:keyPath ofObject:object change:change context:userContext];
+}
+@end
 
-- (void)safeKvo_dealloc {
-    static struct dl_info app_info;
-    if (app_info.dli_saddr == NULL) {
-        dladdr((__bridge void *)[UIApplication.sharedApplication.delegate class], &app_info);
-    }
-    struct dl_info self_info = {0};
-    dladdr((__bridge void *)[self class], &self_info);
-    
-    //    ignore system class
-    if (self_info.dli_fname == NULL || strcmp(app_info.dli_fname, self_info.dli_fname)) {
-        [self safeKvo_dealloc];
-    } else {
-        NSString *value = (NSString *)objc_getAssociatedObject(self, KVOProtectorKey);
-        if ([value isEqualToString:KVOProtectorValue]) {
-            NSArray *keypaths = [self.kvoProxy getAllKeypaths];
-            if (keypaths.count > 0) {
-                NSString *reason = [NSString stringWithFormat:@"****** Waring ***** \n An instance %@ was deallocated while key value observers were still registered with it. The Keypaths is:%@", self.class, [keypaths componentsJoinedByString:@","]];
-                [MYSafeKitRecord recordFatalWithReason:reason errorType:(MYSafeKitShieldTypeKVO)];
+static void MYKVODealloc(__unsafe_unretained id object, SEL selector) {
+    // No state is allocated and no client reporter is invoked during destruction.
+    MYKVOState *state = objc_getAssociatedObject(object, &stateKey);
+    if (state) {
+        [stateLock lock];
+        @try {
+            for (MYKVORegistration *registration in [state.registrations copy]) {
+                MYRemoveRegistration(object, registration);
             }
-            for (NSString *keyPath in keypaths) {
-                // 手动移除没有移除的监听者
-                [self safe_removeObserver:self.kvoProxy forKeyPath:keyPath];
+            for (MYKVORegistration *registration in state.observing.allObjects) {
+                NSObject *observed = registration.observed;
+                if (observed) MYRemoveRegistration(observed, registration);
             }
+        } @finally {
+            [stateLock unlock];
+            ((void (*)(__unsafe_unretained id, SEL))originalDealloc)(object, selector);
+        }
+    } else {
+        ((void (*)(__unsafe_unretained id, SEL))originalDealloc)(object, selector);
+    }
+}
+static void MYKVOReport(NSString *reason) {
+    [MYSafeKitRecord recordFatalWithReason:reason errorType:MYSafeKitShieldTypeKVO];
+}
+static void MYAdd(id object, NSObject *observer, NSString *keyPath, NSKeyValueObservingOptions options, void *context) {
+    if (!observer || !keyPath.length) { MYKVOReport(@"KVO requires an observer and nonempty keyPath"); return; }
+    // Native KVO delivers Initial BEFORE installing the new registration. If the
+    // callback throws, there is no new observation to roll back. Reentrant remove
+    // may only remove an earlier registration, never this not-yet-installed one.
+    if (options & NSKeyValueObservingOptionInitial) {
+        NSMutableDictionary *change = [@{NSKeyValueChangeKindKey:@(NSKeyValueChangeSetting)} mutableCopy];
+        if (options & NSKeyValueObservingOptionNew) change[NSKeyValueChangeNewKey] = [object valueForKeyPath:keyPath] ?: [NSNull null];
+        [observer observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+    MYKVORegistration *registration = [MYKVORegistration new];
+    registration.observer = observer; registration.observed = object; registration.keyPath = keyPath; registration.context = context;
+    [stateLock lock];
+    @try {
+        registration.active = YES;
+        [MYState(object, YES).registrations addObject:registration];
+        [MYState(observer, YES).observing addObject:registration];
+        @try {
+            // Initial was already delivered outside the state lock, as in native KVO.
+            ((void (*)(id, SEL, id, NSString *, NSKeyValueObservingOptions, void *))originalAdd)(object, @selector(addObserver:forKeyPath:options:context:), registration, keyPath, options & ~NSKeyValueObservingOptionInitial, (__bridge void *)registration);
+        } @catch (NSException *exception) {
+            registration.active = NO;
+            [MYState(object, NO).registrations removeObjectIdenticalTo:registration];
+            [MYState(observer, NO).observing removeObject:registration];
+            @throw;
+        }
+    } @finally { [stateLock unlock]; }
+
+}
+static void MYRemove(id object, NSObject *observer, NSString *keyPath, void *context, BOOL matchContext) {
+    if (!observer || !keyPath.length) { MYKVOReport(@"KVO removal requires an observer and nonempty keyPath"); return; }
+    BOOL found = NO;
+    [stateLock lock];
+    @try {
+        for (MYKVORegistration *registration in [MYState(object, NO).registrations reverseObjectEnumerator]) {
+            if (registration.observer == observer && [registration.keyPath isEqualToString:keyPath] && (!matchContext || registration.context == context)) {
+                MYRemoveRegistration(object, registration); found = YES; break;
+            }
+        }
+    } @finally { [stateLock unlock]; }
+    if (!found) {
+        // Registrations made before activation are owned by Foundation, not our ledger.
+        @try {
+            MYNativeRemovalFrame frame = { object, observer, keyPath, nativeRemoval };
+            nativeRemoval = &frame;
+            @try {
+                if (matchContext) ((void (*)(id, SEL, id, NSString *, void *))originalRemoveContext)(object, @selector(removeObserver:forKeyPath:context:), observer, keyPath, context);
+                else ((void (*)(id, SEL, id, NSString *))originalRemove)(object, @selector(removeObserver:forKeyPath:), observer, keyPath);
+            } @finally { nativeRemoval = frame.previous; }
+        } @catch (NSException *exception) {
+            if (![exception.name isEqualToString:NSRangeException]) @throw;
+            MYKVOReport(@"KVO removal does not match a registered observer/keyPath/context");
         }
     }
 }
-
-- (void)setKvoProxy:(XXKVOProxy *)kvoProxy {
-    objc_setAssociatedObject(self, @selector(kvoProxy), kvoProxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+@implementation NSObject (SafeKVO)
++ (void)registerClassPairMethodsInKVO {
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        stateLock = [NSRecursiveLock new];
+        SEL add = @selector(addObserver:forKeyPath:options:context:);
+        SEL remove = @selector(removeObserver:forKeyPath:);
+        SEL removeContext = @selector(removeObserver:forKeyPath:context:);
+        Class cls = [NSObject class];
+        originalAdd = method_getImplementation(class_getInstanceMethod(cls, add));
+        originalRemove = method_getImplementation(class_getInstanceMethod(cls, remove));
+        originalRemoveContext = method_getImplementation(class_getInstanceMethod(cls, removeContext));
+        MYInstallSafeMethod(cls, add, method_getTypeEncoding(class_getInstanceMethod(cls, add)), ^id(IMP original) {
+            return ^(id object, NSObject *observer, NSString *keyPath, NSKeyValueObservingOptions options, void *context) {
+                if (object_getClass(observer) == [MYKVORegistration class]) ((void (*)(id, SEL, id, NSString *, NSKeyValueObservingOptions, void *))original)(object, add, observer, keyPath, options, context);
+                else MYAdd(object, observer, keyPath, options, context);
+            };
+        });
+        MYInstallSafeMethod(cls, remove, "v@:@@", ^id(IMP original) {
+            return ^(id object, NSObject *observer, NSString *keyPath) {
+                if (MYInternalRemoval(object, observer, keyPath)) ((void (*)(id, SEL, id, NSString *))original)(object, remove, observer, keyPath);
+                else MYRemove(object, observer, keyPath, NULL, NO);
+            };
+        });
+        MYInstallSafeMethod(cls, removeContext, "v@:@@^v", ^id(IMP original) {
+            return ^(id object, NSObject *observer, NSString *keyPath, void *context) {
+                if (MYInternalRemoval(object, observer, keyPath)) ((void (*)(id, SEL, id, NSString *, void *))original)(object, removeContext, observer, keyPath, context);
+                else MYRemove(object, observer, keyPath, context, YES);
+            };
+        });
+        SEL deallocSelector = sel_registerName("dealloc");
+        Method method = class_getInstanceMethod(cls, deallocSelector);
+        originalDealloc = method_getImplementation(method);
+        class_replaceMethod(cls, deallocSelector, (IMP)MYKVODealloc, method_getTypeEncoding(method));
+    });
 }
-
-- (XXKVOProxy *)kvoProxy {
-    XXKVOProxy *getKvoProxy = objc_getAssociatedObject(self, @selector(kvoProxy));
-    if (!getKvoProxy) {
-        getKvoProxy = [[XXKVOProxy alloc] init];
-        objc_setAssociatedObject(self, @selector(kvoProxy), getKvoProxy, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return getKvoProxy;
-}
-
 @end

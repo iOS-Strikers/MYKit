@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSObject (Swizzle)
 
 /**
@@ -46,3 +48,10 @@
 + (void)instanceSwizzleMethodWithClass:(Class _Nonnull)klass orginalMethod:(SEL _Nonnull)originalSelector replaceMethod:(SEL _Nonnull)replaceSelector;
 
 @end
+
+/// Installs a typed guard once. The block captures the original IMP, avoiding inherited alias recursion.
+FOUNDATION_EXPORT BOOL MYInstallSafeMethod(Class _Nullable cls, SEL _Nonnull selector,
+                                           const char * _Nonnull encoding,
+                                           id _Nonnull (^ _Nonnull factory)(IMP _Nonnull original));
+
+NS_ASSUME_NONNULL_END
