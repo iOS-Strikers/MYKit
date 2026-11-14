@@ -1,44 +1,88 @@
 # MYKit
 
-[![CI Status](https://img.shields.io/travis/sunjinshuai/MYKit.svg?style=flat)](https://travis-ci.org/sunjinshuai/MYKit)
-[![Version](https://img.shields.io/cocoapods/v/MYKit.svg?style=flat)](https://cocoapods.org/pods/MYKit)
-[![License](https://img.shields.io/cocoapods/l/MYKit.svg?style=flat)](https://cocoapods.org/pods/MYKit)
-[![Platform](https://img.shields.io/cocoapods/p/MYKit.svg?style=flat)](https://cocoapods.org/pods/MYKit)
+Objective-C utilities for iOS, with Foundation extensions, UIKit helpers, and
+opt-in protection for selected exception-prone operations.
 
-## Example
+## Modules
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+| CocoaPods subspec | Contents |
+| --- | --- |
+| `Core` (default) | Umbrella headers and the Foundation, UIKit, and SafeKit modules |
+| `Foundation` | Foundation extensions for collections, strings, dates, data, and runtime helpers |
+| `UIKit` | UIKit extensions; depends on Foundation |
+| `SafeKit` | Container/KVC, KVO, notification, timer, unknown-selector, and NSNull protection; depends on Foundation |
 
-## Requirements
+Source: [`MYKit/Classes`](MYKit/Classes). Specification: [`MYKit.podspec`](MYKit.podspec).
+SafeKit is opt-in: linking the library does not enable its protection hooks.
+
+## Version and platform status
+
+The SafeKit review and fixes are merged into `master` in
+[`8d2aa2a`](https://github.com/iOS-Strikers/MYKit/commit/8d2aa2ab40261a15e12498eaa60fd34263ded01d).
+The podspec still declares **1.1.3**, and the existing `1.1.3` Git tag points to
+code **before** these fixes. No new CocoaPods release was made as part of this work.
+Use the pinned source revision below to obtain the reviewed implementation.
+
+| Item | Status |
+| --- | --- |
+| Library deployment declaration | iOS 8.0 in the podspec; retained, not newly validated |
+| Independent XCTest host | iOS 15.0 deployment target; no CocoaPods dependencies |
+| Verified environment | Xcode 27.2 (27B52), iPhone 17 Pro simulator, iOS 26.5 (23F77), arm64 |
+| Test tooling | Full Xcode, an available iOS simulator, and Python 3 |
+| Not verified in this revision | Physical devices, older iOS versions, and combinations with other swizzling libraries |
 
 ## Installation
 
-MYKit is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+To use only SafeKit from the reviewed source revision:
 
 ```ruby
-pod 'MYKit'
+pod 'MYKit/SafeKit',
+    :git => 'https://github.com/iOS-Strikers/MYKit.git',
+    :commit => '8d2aa2ab40261a15e12498eaa60fd34263ded01d'
 ```
 
-## Author
+For all modules, use `MYKit` instead of `MYKit/SafeKit`. For a local checkout:
 
-sunjinshuai, sunjinshuai@aikucun.com
+```ruby
+pod 'MYKit/SafeKit', :path => '../MYKit'
+```
 
-## License
+Choose one source configuration, then run `pod install` in your application project.
+The historical version-based installation (`pod 'MYKit', '1.1.3'`) does not select
+the new source revision.
 
-MYKit is available under the MIT license. See the LICENSE file for more info.
+## Quick start
 
-## SafeKit protection contract (unreleased changes)
+Register a reporter and enable the abilities needed by your application, ideally
+before the operations you want protected:
+
+```objc
+#import <MYKit/MYSafeKit.h>
+
+@interface AppSafeKitReporter : NSObject <MYSafeKitRecordProtocol>
+@end
+
+@implementation AppSafeKitReporter
+- (void)recordWithReason:(NSError *)reason {
+    NSLog(@"SafeKit: %@", reason);
+}
+@end
+
+// In application startup code:
+[MYSafeKit registerRecordHandler:[AppSafeKitReporter new]];
+[MYSafeKit registerSafeKitShieldWithAbility:
+    MYSafeKitShieldTypeContainer | MYSafeKitShieldTypeKVO];
+```
+
+`registerSafeKitShield` enables `MYSafeKitShieldTypeAll`. It does not promise recovery
+from every crash. The reporter is retained; passing nil to `registerRecordHandler:`
+clears the reporter, not the installed protection hooks.
+
+## SafeKit protection contract
 
 Enable only the abilities needed by the application. Registration is process-wide,
 additive and irreversible; repeated registration is idempotent. `All` includes all
 six abilities, but does not mean that arbitrary crashes can be recovered.
-
-```objc
-[MYSafeKit registerRecordHandler:reporter];
-[MYSafeKit registerSafeKitShieldWithAbility:
-    MYSafeKitShieldTypeContainer | MYSafeKitShieldTypeKVO];
-```
 
 | Ability | Supported behavior | Boundaries |
 | --- | --- | --- |
@@ -53,8 +97,8 @@ six abilities, but does not mean that arbitrary crashes can be recovered.
 
 The old generic unknown-selector `int` stub was ABI-unsafe. Applications that
 previously relied on swallowing arbitrary unknown methods must migrate to explicit
-registration. This is a behavior change; the repository version has not been
-released or bumped as part of this work.
+registration. This is a behavior change in `master`; the podspec version has not been
+bumped and no new release tag was created for these changes.
 
 ```objc
 // The caller MUST guarantee this is the actual encoding of a non-variadic call.
@@ -102,25 +146,73 @@ The deprecated alert helper dispatches to the main queue and is not a
 default reporting mechanism. Do not perform recovery requiring a live UI from a
 report callback.
 
-### Tests
+## Tests and verification
 
-`Tests/SafeKitTests.xcodeproj` is an independent iOS XCTest host with no CocoaPods
-dependencies. Its deployment target is iOS 15; this does **not** raise the podspec's
-iOS 8 declaration. The legacy Example's iOS 8 build configuration is incompatible
-with Xcode 27.2. Old OS compatibility, device execution, and interactions with
-unrelated swizzling libraries require separate verification and are not claimed by
-the current simulator run.
+The latest recorded review run used **29 test methods across 11 process-isolated
+configurations: 149 executions, all passed, with no skipped or missing cases**.
+Two independent code-review rounds completed, with the final review clean. These
+are recorded results for the reviewed source revision, not a live CI badge.
+Implementation and acceptance details: [delivery record](docs-ai/001-safekit-review/001-action.md).
+That record captures the validation-time state; current merge and version status
+are described above.
+
+The independent [`Tests/SafeKitTests.xcodeproj`](Tests/SafeKitTests.xcodeproj) builds
+a minimal app host, XCTest bundle, and a separate framework fixture. It does not
+require the legacy Example project or `pod install`.
+
+From the repository root, select an available simulator:
 
 ```sh
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer \
-python3 Tests/run-tests.py --udid YOUR_SIMULATOR_UDID --output /tmp/mykit-results
+export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+xcrun simctl list devices available
 ```
 
-The runner selects the exact cases in `Tests/matrix.json` and launches a new test
-process for Native, each individual ability, All, Reverse, and Concurrent. It
-requires every selected test to pass; missing/skipped tests are failures. Concurrent
-starts with simultaneous first-time installation, not just repeated calls after
-activation. Native provides the reference semantics for KVO Initial delivery and
-registration counts. The fixture framework validates observations outside the app
-executable. Regenerate the checked-in project only when source files change, using
-`ruby Tests/generate-project.rb` with the `xcodeproj` gem installed.
+Then replace `YOUR_SIMULATOR_UDID` and run the full matrix:
+
+```sh
+python3 Tests/run-tests.py \
+  --udid YOUR_SIMULATOR_UDID \
+  --output /tmp/mykit-results
+```
+
+**The output directory must not already exist.** Choose a fresh path for every run;
+previous evidence is not overwritten. To select individual modes:
+
+```sh
+python3 Tests/run-tests.py \
+  --udid YOUR_SIMULATOR_UDID \
+  --mode Container --mode KVO \
+  --output /tmp/mykit-container-kvo-results
+```
+
+| Configuration | Purpose |
+| --- | --- |
+| `Native` | Unprotected Foundation behavior, including KVO reference semantics |
+| `Container`, `KVO`, `Unknown`, `Null`, `Notification`, `Timer`, `Record` | Individual capability and reporting verification |
+| `All` | Combined protections |
+| `Reverse` | Reverse capability registration order |
+| `Concurrent` | Concurrent first-time installation of all protections |
+
+The runner uses [`Tests/matrix.json`](Tests/matrix.json) to select exact cases and
+requires every selected case to pass. Missing/skipped cases fail the run. Standard
+runs write `summary.json`, per-mode commands/logs/test trees and `.xcresult` bundles,
+plus shared DerivedData under the chosen output directory. The
+[`acceptance`](Tests/acceptance) directory provides explicit contracts for the
+optional evidence-verifier integration.
+
+The checked-in Xcode project can be used directly. Only when changing its source
+membership, regenerate it with `ruby Tests/generate-project.rb`; that maintenance
+step requires the `xcodeproj` Ruby gem.
+
+## Legacy example
+
+[`Example`](Example) contains the original demonstration application and CocoaPods
+configuration. Its iOS 8 deployment settings are incompatible with the verified
+Xcode 27.2 toolchain, so it is not the current validation entry point. Use the
+independent test project above to reproduce the current SafeKit verification.
+
+## Author and license
+
+Created by sunjinshuai — sunjinshuai@aikucun.com.
+
+Distributed under the [MIT license](LICENSE).
