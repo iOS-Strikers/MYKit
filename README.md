@@ -20,11 +20,11 @@ SafeKit 的审查与修复已通过提交
 [`8d2aa2a`](https://github.com/iOS-Strikers/MYKit/commit/8d2aa2ab40261a15e12498eaa60fd34263ded01d)
 合入 `master`。
 
-podspec 中的版本号仍为 **1.1.3**，现有 Git 标签 `1.1.3` 指向**修复前**的代码。本次工作未发布新的 CocoaPods 版本。需要使用已审查的实现时，请按下方示例固定到对应提交。
+**2.0.0** 包含本次 SafeKit 修复，最低系统版本提高到 **iOS 15.0**。未知方法兜底需要显式登记真实签名。详见 [变更记录](CHANGELOG.md)。
 
 | 项目 | 状态 |
 | --- | --- |
-| 库声明的最低系统版本 | podspec 保留 iOS 8.0 声明，本次未重新验证该版本兼容性 |
+| 库声明的最低系统版本 | iOS 15.0 |
 | 独立 XCTest 宿主 | 最低部署版本为 iOS 15.0，不依赖 CocoaPods |
 | 已验证环境 | Xcode 27.2（27B52）、iPhone 17 Pro 模拟器、iOS 26.5（23F77）、arm64 |
 | 测试工具要求 | 完整 Xcode、可用的 iOS 模拟器和 Python 3 |
@@ -35,9 +35,7 @@ podspec 中的版本号仍为 **1.1.3**，现有 Git 标签 `1.1.3` 指向**修�
 仅接入已审查版本的 SafeKit：
 
 ```ruby
-pod 'MYKit/SafeKit',
-    :git => 'https://github.com/iOS-Strikers/MYKit.git',
-    :commit => '8d2aa2ab40261a15e12498eaa60fd34263ded01d'
+pod 'MYKit/SafeKit', '2.0.0'
 ```
 
 需要全部模块时，将 `MYKit/SafeKit` 改为 `MYKit`。也可以引用本地仓库：
@@ -91,7 +89,7 @@ pod 'MYKit/SafeKit', :path => '../MYKit'
 ### 兼容性变化
 
 旧版未知方法防护使用统一返回 `int` 的占位实现，存在 ABI 不匹配风险。此前依赖“吞掉任意未知方法”的应用，需要迁移到显式签名登记。
-这是 `master` 中的行为变化；podspec 版本尚未提升，也未为这些变更创建新的发布标签。
+这是 2.0.0 的不兼容行为变化。最低系统版本也由 iOS 8.0 提高到 iOS 15.0。
 
 ```objc
 // 调用方必须保证编码与真实调用一致，且方法不使用可变参数。
