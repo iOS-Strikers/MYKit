@@ -1,6 +1,0 @@
-framework module MYKit {
-  umbrella header "MYKit-umbrella.h"
-
-  export *
-  module * { export * }
-}

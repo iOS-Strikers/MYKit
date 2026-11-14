@@ -1,60 +1,40 @@
-//
-//  MYKVOViewController.m
-//  MYKitDemo
-//
-//  Created by QMMac on 2018/7/30.
-//  Copyright © 2018 com.51fanxing. All rights reserved.
-//
-
 #import "MYKVOViewController.h"
 #import "NSObject+SafeKVO.h"
 
+static void *MYDemoKVOContext = &MYDemoKVOContext;
 @interface MYKVOViewController ()
-
+@property (nonatomic) NSInteger demoValue;
+@property (nonatomic) NSUInteger observationCount;
+@property (nonatomic, strong) UIButton *demoButton;
 @end
 
 @implementation MYKVOViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = UIColor.systemBackgroundColor;
+    self.demoButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.demoButton.frame = CGRectMake(24, 120, 320, 60);
+    self.demoButton.accessibilityIdentifier = @"kvo.run";
+    [self.demoButton setTitle:@"执行重复添加与移除" forState:UIControlStateNormal];
+    [self.demoButton addTarget:self action:@selector(testKVO2) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.demoButton];
 }
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-  
-    [self testKVO2];
-}
-
-- (void)testKVO1 {
-//    [self addObserver:[Person new ] forKeyPath:@"view" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:NULL];
-    
-    self.view = [UIView new]; // Crash
-    // 被观察者是局部变量  触发KVOCrash
-}
-
 - (void)testKVO2 {
-    [self addObserver:self forKeyPath:@"view" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:NULL];
-
-    [self addObserver:self forKeyPath:@"frame" options:kNilOptions context:NULL];
-//    [self addObserver:self forKeyPath:@"frame" options:kNilOptions context:NULL];
-    [self addObserver:self forKeyPath:@"center" options:kNilOptions context:NULL];
-    [self addObserver:self forKeyPath:@"bounds" options:kNilOptions context:NULL];
-    [self addObserver:self forKeyPath:@"transform" options:kNilOptions context:NULL];
-
-    self.view = [UIView new];
-    // 会触发多次响应事件
-
-    // for test 多余的移除会导致Crash  because it is not registered as an observer.'
-//    [self removeObserver:self forKeyPath:@"view"];
-//    [self removeObserver:self forKeyPath:@"view"];
+    [self addObserver:self forKeyPath:@"demoValue" options:NSKeyValueObservingOptionNew context:MYDemoKVOContext];
+    [self addObserver:self forKeyPath:@"demoValue" options:NSKeyValueObservingOptionNew context:MYDemoKVOContext];
+    self.demoValue += 1;
+    [self removeObserver:self forKeyPath:@"demoValue" context:MYDemoKVOContext];
+    [self removeObserver:self forKeyPath:@"demoValue" context:MYDemoKVOContext];
+    // Two registrations preserve native delivery counts; the third removal is guarded.
+    [self removeObserver:self forKeyPath:@"demoValue" context:MYDemoKVOContext];
+    self.demoValue += 1;
+    [self.demoButton setTitle:[NSString stringWithFormat:@"已收到 %lu 次通知，多余移除已防护", (unsigned long)self.observationCount] forState:UIControlStateNormal];
 }
-
-- (void)dealloc {
-    NSLog(@"%@ --> %s", [self class], __func__);
-    
-    [self removeObserver:self forKeyPath:@"view"];
-    [self removeObserver:self forKeyPath:@"view"];
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == MYDemoKVOContext) {
+        self.observationCount += 1;
+    } else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
-
 @end

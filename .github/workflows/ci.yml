@@ -1,0 +1,48 @@
+name: iOS validation
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ios-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Select Xcode 26 or newer
+        shell: bash
+        run: |
+          python3 - <<'PYTHON'
+          import os, pathlib, plistlib
+          candidates = []
+          for app in pathlib.Path('/Applications').glob('Xcode*.app'):
+              info = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
+              version = tuple(int(n) for n in info['CFBundleShortVersionString'].split('.'))
+              if version[0] >= 26:
+                  candidates.append((version, str(app / 'Contents/Developer')))
+          if not candidates:
+              raise SystemExit('Runner has no Xcode 26+; update the runner image.')
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write('DEVELOPER_DIR=' + max(candidates)[1] + '\n')
+          PYTHON
+      - name: Build, test and lint
+        run: ci/run.sh "$RUNNER_TEMP/mykit-validation"
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: ios-validation
+          path: |
+            ${{ runner.temp }}/mykit-validation
+            !${{ runner.temp }}/mykit-validation/**/DerivedData*/**
+          if-no-files-found: warn
+          retention-days: 7

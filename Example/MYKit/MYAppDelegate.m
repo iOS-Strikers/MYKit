@@ -34,7 +34,7 @@
 - (void)recordWithReason:(NSError *)reason {
     
     NSString *crashReason = [MYSafeKitRecord getErrorMessageWithTipString:reason.description];
-    [MYSafeKitRecord safeKit_showAlterWithMessage:crashReason];
+    NSLog(@"[SafeKit Demo] %@", crashReason);
 }
 
 

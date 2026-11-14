@@ -1,44 +1,18 @@
-//
-//  MYUncaughtExceptionViewController.m
-//  MYKitDemo
-//
-//  Created by michael on 2019/2/22.
-//  Copyright © 2019 com.51fanxing. All rights reserved.
-//
-
 #import "MYUncaughtExceptionViewController.h"
 
-typedef struct Test {
-    int a;
-    int b;
-};
-
-@interface MYUncaughtExceptionViewController ()
-
-@end
-
 @implementation MYUncaughtExceptionViewController
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame = CGRectMake(([UIScreen mainScreen].bounds.size.width - 100)/2, 100, 100, 50);
-    [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
-    [button setTitle:@"SignalException" forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(buttonClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:button];
+    self.view.backgroundColor = UIColor.systemBackgroundColor;
+    UILabel *label = [UILabel new];
+    label.numberOfLines = 0;
+    label.accessibilityIdentifier = @"coverage.explanation";
+    label.text = @"防护边界\n\nSafeKit 不恢复任意信号、非法指针或内存破坏。未捕获异常记录仅用于诊断，不能保证进程继续运行。\n\n本页不执行破坏性内存操作。";
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.view addSubview:label];
+    [NSLayoutConstraint activateConstraints:@[
+        [label.leadingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.leadingAnchor constant:24],
+        [label.trailingAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.trailingAnchor constant:-24],
+        [label.topAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.topAnchor constant:24]]];
 }
-
-- (void)buttonClick {
-    struct Test *pTest = {1,2};
-    free(pTest);
-    pTest->a = 5;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 @end

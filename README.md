@@ -142,7 +142,7 @@ BOOL accepted = [MYSafeKit registerFallbackForClass:[MyModel class]
 
 实现与验收细节见[交付记录](docs-ai/001-safekit-review/001-action.md)。该记录描述验收时的状态；当前合并与版本状态以上文说明为准。
 
-独立工程 [`Tests/SafeKitTests.xcodeproj`](Tests/SafeKitTests.xcodeproj) 包含最小应用宿主、XCTest 测试包和独立 framework 测试模块，不依赖旧版 Example 工程，也无需执行 `pod install`。
+独立工程 [`Tests/SafeKitTests.xcodeproj`](Tests/SafeKitTests.xcodeproj) 包含最小应用宿主、XCTest 测试包和独立 framework 测试模块，不依赖 Example 工程，也无需执行 `pod install`。
 
 在仓库根目录选择可用模拟器：
 
@@ -183,10 +183,17 @@ python3 Tests/run-tests.py \
 
 仓库已包含可直接使用的 Xcode 工程。只有调整工程包含的源文件时，才需要运行 `ruby Tests/generate-project.rb` 重新生成；该维护步骤依赖 Ruby 的 `xcodeproj` gem。
 
-## 旧版示例工程
+## 示例工程
 
-[`Example`](Example) 保留了原始演示应用和 CocoaPods 配置。
-其 iOS 8 部署设置与本次使用的 Xcode 27.2 工具链不兼容，因此不是当前的验收入口。复现本次 SafeKit 验证时，请使用上述独立测试工程。
+[`Example`](Example/README.md) 最低支持 iOS 15，使用本地 MYKit 2.0.0，包含 8 项启动、路由、签名契约、生命周期与截图测试。
+
+```sh
+bundle install
+bundle exec pod install --deployment --project-directory=Example
+open Example/MYKit.xcworkspace
+```
+
+选择 `MYKit-Example` scheme。完整本地验证执行 `ci/run.sh`；GitHub Actions 使用相同入口运行示例、SafeKit 11 模式、Utilities 测试及 CocoaPods lint。Pods 由锁文件恢复，不再提交生成代码。完整测试链路需要 Ruby 3.3+、Xcode 26+ 与 iOS 26+ 模拟器；详见 [示例说明](Example/README.md)。
 
 ## 作者与许可证
 

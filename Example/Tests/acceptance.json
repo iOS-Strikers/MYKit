@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "criteria": [
+    {
+      "id": "testApplicationLaunches",
+      "required": true,
+      "tests": [
+        "Tests/testApplicationLaunches"
+      ]
+    },
+    {
+      "id": "testSafeKitMenuRoutesResolve",
+      "required": true,
+      "tests": [
+        "Tests/testSafeKitMenuRoutesResolve"
+      ]
+    },
+    {
+      "id": "testRegisteredFallbackAndUnregisteredFailure",
+      "required": true,
+      "tests": [
+        "Tests/testRegisteredFallbackAndUnregisteredFailure"
+      ]
+    },
+    {
+      "id": "testKVORepeatAndRelease",
+      "required": true,
+      "tests": [
+        "Tests/testKVORepeatAndRelease"
+      ]
+    },
+    {
+      "id": "testTimerFiresAndReleasesTarget",
+      "required": true,
+      "tests": [
+        "Tests/testTimerFiresAndReleasesTarget"
+      ]
+    },
+    {
+      "id": "testNotificationDeliveryAndRelease",
+      "required": true,
+      "tests": [
+        "Tests/testNotificationDeliveryAndRelease"
+      ]
+    },
+    {
+      "id": "testCoveragePageContainsExplanationWithoutCrashButton",
+      "required": true,
+      "tests": [
+        "Tests/testCoveragePageContainsExplanationWithoutCrashButton"
+      ]
+    },
+    {
+      "id": "testRenderKeyPages",
+      "required": true,
+      "tests": [
+        "Tests/testRenderKeyPages"
+      ]
+    }
+  ]
+}

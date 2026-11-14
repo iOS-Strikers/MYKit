@@ -12,6 +12,8 @@
 @interface MYTimerViewController ()
 
 @property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic) NSUInteger tickCount;
+@property (nonatomic, strong) UILabel *statusLabel;
 
 @end
 
@@ -20,15 +22,20 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"";
+    self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(24, 120, 320, 80)];
+    self.statusLabel.numberOfLines = 0;
+    self.statusLabel.accessibilityIdentifier = @"timer.status";
+    self.statusLabel.text = @"定时器运行中；退出页面后目标可释放。";
+    [self.view addSubview:self.statusLabel];
     self.view.backgroundColor = [UIColor whiteColor];
     
-    self.timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(timerEvent) userInfo:nil repeats:YES];
+    self.timer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(timerEvent:) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
 }
 
-- (void)timerEvent {
-    NSLog(@"timer");
+- (void)timerEvent:(NSTimer *)timer {
+    self.tickCount += 1;
+    self.statusLabel.text = [NSString stringWithFormat:@"已触发 %lu 次；退出页面后目标可释放。", (unsigned long)self.tickCount];
 }
 
 - (void)dealloc {
